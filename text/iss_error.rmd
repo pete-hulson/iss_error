@@ -1,5 +1,5 @@
 ---
-title: "Adding ageing error and growth variability in the estimation of age composition input sample size"
+title: "Inclusion of ageing error and growth variability in the estimation of age composition input sample size"
 author:
   - name: Pete Hulson
     institute: afscjnu
@@ -43,6 +43,16 @@ editor_options:
 [General para on age comps]
 
 [General para on fitting comp data and input sample size]
+Since modern stock assessment models integrate multiple sources of data related to catch (e.g., fisheries catch-per-unit-effort, survey indices of abundance), life history (e.g., size-at-age, maturity-at-age, selectivity-at-age), and composition (e.g., length and age), it is imperative to consider the relative information content these data products provide to the model employed.
+Compositional information on age and length comprise important data products used in these assessments, as they facilitate the tracking of year classes and size-structure over time, thus improving our understanding of the population dynamics [@QuinnDeriso1999].
+For stocks that depend on the periodic production of strong year-classes and subsequent recruitment into fisheries, sampling efforts for age and length data, scaling of these data to the population level ('compositional expansion'), and the weight assigned to these data products in assessment models are highly important.
+
+This is often handled through the use of data-weighting methods, checking the fit of compositional data in the model, and ensuring a good match between the variance of the data and the variance implied by the model [@Francis2017].
+The weight assigned to annual compositions (the 'input sample size') can be calculated using myriad methods (e.g., fixed values, number of samples or tows sampled upon, bootstrapping compositions; @Stewart2014), as can the estimated sample size resulting from the fit of compositional data in the model (the 'effective sample size').
+Often, input sample sizes are used in an initial fit of the model, and then a tuning (or 're-weighting') process is used to ensure the compositional data are appropriately weighted.
+This re-weighting process has various forms, but two common methods are to use the estimated effective sample size in a new fit of the model, or calculating a new weight based on expected vs. observed compositions applied to the original input sample size.
+
+
 
 [General para on ageing error and how it's integrated into assessments]
 
