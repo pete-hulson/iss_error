@@ -23,7 +23,7 @@ csl: canjfas.csl
 header-includes:
   - \usepackage(amsmath) # for cases in equations
   - \usepackage{booktabs}
-  - \usepackaee{cleveref}
+  - \usepackage{cleveref}
   - \renewcommand{\eqref}{\Cref}
   - \Crefformat{equation}{#2#1#3}
   
@@ -40,57 +40,37 @@ editor_options:
 
 # Introduction
 
-[General para on age comps]
+Compositional information on age and length comprise critical data products used statistical catch-at-age assessment models, as they facilitate the tracking of year classes and size-structure over time, thus improving our understanding of the population dynamics [@QuinnDeriso1999]. 
+There are two primary sources for age and length composition data used in statistical catch-at-age models: fishery-independent sources, which include some level of randomized and standardized collection of samples in a non-targeted framework, and fishery-dependent sources, in which collection of age and length samples are also randomized at some level but are obtained from hauls that are not random but rather targeted within a specific fishery. 
+Regardless of the source of age and length composition data, it is commonly accepted that overdispersion of collections are inherent to the data due to intra-haul correlation [e.g., @Pennington2000]. 
+The concept of 'effective sample size' has since been developed, that is smaller than the sample size collected, to reflect the increased uncertainty due to this overdispersion [e.g., @Mcallister1997]. 
+Since modern statistical catch-at-age stock assessment models integrate multiple sources of data related to catch (e.g., fisheries catch-per-unit-effort, survey indices of abundance), life history (e.g., size-at-age, maturity-at-age, selectivity-at-age), and composition (e.g., length and age), it is imperative to consider the relative information content these data products provide to the model employed. 
 
-[General para on fitting comp data and input sample size]
-Since modern stock assessment models integrate multiple sources of data related to catch (e.g., fisheries catch-per-unit-effort, survey indices of abundance), life history (e.g., size-at-age, maturity-at-age, selectivity-at-age), and composition (e.g., length and age), it is imperative to consider the relative information content these data products provide to the model employed.
-Compositional information on age and length comprise important data products used in these assessments, as they facilitate the tracking of year classes and size-structure over time, thus improving our understanding of the population dynamics [@QuinnDeriso1999].
-For stocks that depend on the periodic production of strong year-classes and subsequent recruitment into fisheries, sampling efforts for age and length data, scaling of these data to the population level ('compositional expansion'), and the weight assigned to these data products in assessment models are highly important.
+Because fisheries often depend on the periodic production of strong year-classes and subsequent recruitment into fishery catch, sampling efforts for age and length data, scaling of these data to the population level ('compositional expansion'), and the weight assigned to these data products in assessment models are highly important in order to provide accurate advice for management. 
+This is often handled through the use of data-weighting methods, checking the fit of compositional data in the model, and ensuring a good match between the variance of the data and the variance implied by the model [@Francis2017]. 
+The weight assigned to annual compositions (the 'input sample size') can follow a myriad of methods (e.g., fixed values as in @Hulson2022b, number of samples or tows sampled upon as in @Hulson2021 or @Spencer2022, bootstrapping compositions as in @Stewart2014). 
+The primary consideration when assigning a weight to age or length composition data is to account for the potential variability and correlation in the sampling process. 
+The method developed by @Stewart2014 allows for resampling techniques to be employed at each level of the sampling design, and provides an objective avenue to determine input sample size that is smaller than the actual sample size based on the observation variability contained within the sampling process.  
 
-This is often handled through the use of data-weighting methods, checking the fit of compositional data in the model, and ensuring a good match between the variance of the data and the variance implied by the model [@Francis2017].
-The weight assigned to annual compositions (the 'input sample size') can be calculated using myriad methods (e.g., fixed values, number of samples or tows sampled upon, bootstrapping compositions; @Stewart2014), as can the estimated sample size resulting from the fit of compositional data in the model (the 'effective sample size').
-Often, input sample sizes are used in an initial fit of the model, and then a tuning (or 're-weighting') process is used to ensure the compositional data are appropriately weighted.
-This re-weighting process has various forms, but two common methods are to use the estimated effective sample size in a new fit of the model, or calculating a new weight based on expected vs. observed compositions applied to the original input sample size.
+For every fish species sampled for which age is capable of being determined from otoliths there is the potential for ageing error. 
+There are a number of factors that can influence the magnitude of ageing error [@Nesslage2022], but inherent to obtaining ages from otoliths is variability in the age readings. 
+To account for this source of variability, ageing laboratories regularly evaluate precision through obtaining multiple readings of the same otolith across different age readers [@Morrison2005]. 
+Several methods have been developed to account for ageing error in statistical catch-at-age models when fitting age composition through the use of an ageing error matrix [e.g., @Candy2012; @Punt2008]. 
+The essence of this approach is that the numbers-at-age estimated by the assessment model are 'corrected' through multiplication with an ageing error matrix, which assigns estimated numbers to adjacent age-classes depending on the magnitude of the ageing error within the specific age-class. 
+Since the development and implementation of ageing error matrices a number of studies have been devoted to quantifying the effects of ageing error on assessment model estimates [e.g., @Henriquez2016, @Liao2013]. 
+Within each of these studies, and in each application of an ageing error matrix within a stock assessment model, the age composition data fit will be weighted by an input sample size. 
+As described previously, the input sample size selected would reflect the variability in the sampling process, which would also include the variability in the age readings themselves. 
 
+In the process of compositional expansion, it is often the case that an age-length key (ALK) is employed to expand population numbers-at-length to population numbers-at-age [@Ailloud2019]. 
+It is through the age-length key, and the subsequent age expansion, that observations of age composition are derived from fishery-independent and fishery-dependent sources. 
+Conditional age-at-length (CAAL), in which paired age-length data are used as in indication of the age distribution for a specific length, is used to inform length-at-age and it's related uncertainty [@Taylor2013]. 
+CAAL data can be used directly within statistical catch-at-age models to inform estimates of growth as well as composition data [@Lee2019] and has been implemented in a number of stock assessments [e.g., @Mcgilliard2019; @Hulson2022b]. 
+An inherent component to both the ALK and CAAL is the variability in length for a given age, in addition, when using CAAL data as an additional likelihood component to a statistical catch-at-age model one must determine the input sample size to be used to weight this information.
 
-
-[General para on ageing error and how it's integrated into assessments]
-
-[General para on growth variability, tied to condition-age-at-length]
-
-[Purpose para: to provide estimates of input sample size that integrate ageing error and growth variability]
-
-
-
-
-
-
-
-Many integrated fishery stock assessments rely on estimates of fish population length composition either directly [@Punt2013] or as a derived quantity [e.g. age composition; @Maunder2015]. The most reliable length composition estimates are based on observations from fishery-independent surveys because these platforms generally avoid the sample selection bias inherent in directed commercial fisheries [@NRC1998]. Past analyses have focused on the statistical efficiency of composition estimates for data weighting and applications to likelihood functions [e.g., @Thorson2014; @Thorson2017; @Francis2017].
-It is recognized in sampling theory that increasing the number of samples increases the precision of the estimate, and from this perspective, one should require the maximum number of samples per each survey observation.
-However, to increase the precision of age or length composition estimates it's not just the magnitude of sampling that is influential, but also the manner in which the samples are collected [@Siskey2022].
-Further, each fish sampled on a survey has both an immediate physical labor cost (e.g. at-sea time management issues) and a cumulative health cost (e.g. repetitive stress injuries).
-
-The National Oceanic and Atmospheric Administration's (NOAA's) Alaska Fisheries Science Center (AFSC) has conducted effort-standardized bottom trawl surveys in the eastern Bering Sea (EBS), Gulf of Alaska (GOA) and Aleutian Islands (AI) since 1982 [@Stauffer2004].
-These resource surveys comprehensively catalog the biota encountered at each sampling station.
-Observations of sex-specific size distributions for each encountered species are collected by: (1) sorting the trawl sample by species, (2) weighing each species in aggregate, (3) obtaining a random subsample of target sample size, (4) sorting the length subsample by sex (each fish is cut with a scalpel, gonads identified and placed in a sex-specific receptacle), and (5) measuring and recording each fish length (each fish is placed on a measuring board, length is identified and the species, sex and measurement are recorded into a computer).
-This length measurement process is repeated over 100,000 times in a given survey each year, representing a daunting amount of work for 6 field scientists per research vessel.
-Each year, this work flow results in acute and repetitive stress injuries, some requiring medical interventions and claims to the U.S.
-Office of Workers' Compensation Programs.
-Another consequence of the intensity of this work are unrecoverable errors in the observed data; as fatigue or injuries accumulate during the course of field work, so do data collection errors (e.g. failure to properly encode length measurements with the correct species or sex or incorrect identification of sex), despite extensive *in situ* quality assurance protocols.
-
-At the AFSC, length frequency sampling from the bottom trawl surveys is used in stock assessment models in a variety of ways to inform estimates of population abundance that are subsequently used to set management quantities.
-The most common use of length frequency sampling is to derive estimates of the population abundance at length that are then used in an age-length key to estimate population estimates at age and the model is fit to these age composition estimates [e.g., @Spencer2020, @Monnahan2021]. Length frequency samples are also used in many flatfish assessments in a conditional-age-at-length framework [e.g., @Rudd2021] that both fits the length composition and enables estimation of growth internally to the assessment [e.g., @Turnock2017]. In some cases, where age data is not available, length frequency samples which have been expanded to population abundance at length estimates are used directly as composition data within the assessment [e.g., @Mcgilliard2019]. Finally, recent developments have included using length frequency samples in a model-based framework to estimate length and age composition estimates [@Thorson2019; @Ianelli2021; @Thompson2021].
-
-It has become commonly understood that sampling to determine age and length composition on fishery-independent or fishery-dependent platforms can be influenced by intra-haul correlation, or, that samples are taken from a school of fish that are very similar to each other in size and/or age that may not be representative of the overall population's size and/or age distribution [e.g., @Pennington2000]. In order to evaluate and identify the level of intra-haul correlation, and how this can be accounted for in stock assessment, the concept of 'effective sample size' has been developed, in which the effective sample size is smaller than the actual sample size and reflects the increase in uncertainty that is due to the intra-haul correlation displayed by the species that are sampled [e.g., @Mcallister1997]. A number of studies have used effective sample size to evaluate the impact on assessment results including whether effective sample size can be estimated by the assessment model (@Francis2017; @Thorson2017; @Hulson2012) and more recently as a tool to evaluate the implications of changes to sampling methodologies and the subsequent influence on assessment model results [@Siskey2022].
-Overall, the use of effective sample size has become a universal method to evaluate uncertainty in length and age composition data.
-
-In December of 2021 an AFSC working group was formed (the 'Survey Workload Optimization' working group, SWO) to evaluate the impacts of reducing sampling for sex within the length frequency data collections due to repetitive motion injuries that have been occuring on the bottom trawl surveys.
-From the stock assessment perspective, the primary concern when reducing the sampling for sex within the length frequency data collections was the impact on the uncertainty in subsequent sex-specific length composition data.
-This is of particular importance to stock assessments that are sex-specific, such as the flatfish assessments conducted by AFSC.
-To that end, using effective sample size as the primary statistic to evaluate uncertainty in the length composition data that is derived from the bottom trawl surveys, we evaluated the impact of reducing sampling for sex within the length frequency data collection to answer three questions: (1) what is the impact of reducing sampling for sex on the uncertainty in the sex-specific length composition?
-(2) Is there a point of diminishing returns as we increase the number of lengths that are sampled for sex?
-And, (3) is there an acceptable level of increase in uncertainty in sex-specific length composition data due to subsampling for sex?
+Despite the acceptance of requiring an input sample size to weight age composition data in statistical catch-at-age models that reflects the added uncertainty caused by overdispersion common to age sampling, and the recognition of the inherent variability in the ageing process when reading otoliths and in the growth process upon which age-length keys are based, these sources of uncertainty have not been previously integrated in an objective estimation method for input sample size. 
+In this study, we use the methods of @Stewart2014 to estimate age composition input sample size that includes both ageing error and growth variability in the estimation process. 
+We show, in a step-wise process, the added variability in age composition sample size from including ageing error and growth variability across a number of species that reflect differing life histories and levels of ageing difficulty. 
+Using a current statistical catch-at-age model that is used for assessment and management as a case study we then show the effects of this added uncertainty on assessment model results.
 
 # Methods
 
