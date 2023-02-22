@@ -40,7 +40,7 @@ editor_options:
 
 # Introduction
 
-Compositional information on age and length comprise critical data products used statistical catch-at-age assessment models, as they facilitate the tracking of year classes and size-structure over time, thus improving our understanding of the population dynamics [@QuinnDeriso1999]. 
+Compositional information on age and length comprise critical data products used in statistical catch-at-age assessment models, as they facilitate the tracking of year classes and size-structure over time and improve our understanding of the population dynamics [@QuinnDeriso1999]. 
 There are two primary sources for age and length composition data used in statistical catch-at-age models: fishery-independent sources, which include some level of randomized and standardized collection of samples in a non-targeted framework, and fishery-dependent sources, in which collection of age and length samples are also randomized at some level but are obtained from hauls that are not random but rather targeted within a specific fishery. 
 Regardless of the source of age and length composition data, it is commonly accepted that overdispersion of collections are inherent to the data due to intra-haul correlation [e.g., @Pennington2000]. 
 The concept of 'effective sample size' has since been developed, that is smaller than the sample size collected, to reflect the increased uncertainty due to this overdispersion [e.g., @Mcallister1997]. 
@@ -48,15 +48,15 @@ Since modern statistical catch-at-age stock assessment models integrate multiple
 
 Because fisheries often depend on the periodic production of strong year-classes and subsequent recruitment into fishery catch, sampling efforts for age and length data, scaling of these data to the population level ('compositional expansion'), and the weight assigned to these data products in assessment models are highly important in order to provide accurate advice for management. 
 This is often handled through the use of data-weighting methods, checking the fit of compositional data in the model, and ensuring a good match between the variance of the data and the variance implied by the model [@Francis2017]. 
-The weight assigned to annual compositions (the 'input sample size') can follow a myriad of methods (e.g., fixed values as in @Hulson2022b, number of samples or tows sampled upon as in @Hulson2021 or @Spencer2022, bootstrapping compositions as in @Stewart2014). 
+The weight assigned to annual compositions (the 'input sample size') can follow a myriad of methods (e.g., fixed values as in @Monnahan2021, number of samples or tows sampled upon as in @Hulson2021 or @Spencer2022, bootstrapping compositions as in @Stewart2014). 
 The primary consideration when assigning a weight to age or length composition data is to account for the potential variability and correlation in the sampling process. 
 The method developed by @Stewart2014 allows for resampling techniques to be employed at each level of the sampling design, and provides an objective avenue to determine input sample size that is smaller than the actual sample size based on the observation variability contained within the sampling process.  
 
-For every fish species sampled for which age is capable of being determined from otoliths there is the potential for ageing error. 
+In addition to intra-haul correlation, for every fish species sampled for which age is capable of being determined from otoliths there is resulting variability in the ageing of the otolith, often called 'ageing error' [e.g., @Punt2008]. 
 There are a number of factors that can influence the magnitude of ageing error [@Nesslage2022], but inherent to obtaining ages from otoliths is variability in the age readings. 
 To account for this source of variability, ageing laboratories regularly evaluate precision through obtaining multiple readings of the same otolith across different age readers [@Morrison2005]. 
-Several methods have been developed to account for ageing error in statistical catch-at-age models when fitting age composition through the use of an ageing error matrix [e.g., @Candy2012; @Punt2008]. 
-The essence of this approach is that the numbers-at-age estimated by the assessment model are 'corrected' through multiplication with an ageing error matrix, which assigns estimated numbers to adjacent age-classes depending on the magnitude of the ageing error within the specific age-class. 
+Several methods have been developed to account for ageing error in statistical catch-at-age models when fitting age composition through the use of an ageing error matrix [@Candy2012; @Punt2008]. 
+The essence of this approach is that the numbers-at-age estimated by the assessment model are 'corrected' through multiplication with an ageing error matrix, which assigns estimated numbers-at-age to adjacent age-classes depending on the magnitude of the ageing error within the specific age-class. 
 Since the development and implementation of ageing error matrices a number of studies have been devoted to quantifying the effects of ageing error on assessment model estimates [e.g., @Henriquez2016, @Liao2013]. 
 Within each of these studies, and in each application of an ageing error matrix within a stock assessment model, the age composition data fit will be weighted by an input sample size. 
 As described previously, the input sample size selected would reflect the variability in the sampling process, which would also include the variability in the age readings themselves. 
@@ -64,13 +64,14 @@ As described previously, the input sample size selected would reflect the variab
 In the process of compositional expansion, it is often the case that an age-length key (ALK) is employed to expand population numbers-at-length to population numbers-at-age [@Ailloud2019]. 
 It is through the age-length key, and the subsequent age expansion, that observations of age composition are derived from fishery-independent and fishery-dependent sources. 
 Conditional age-at-length (CAAL), in which paired age-length data are used as in indication of the age distribution for a specific length, is used to inform length-at-age and it's related uncertainty [@Taylor2013]. 
-CAAL data can be used directly within statistical catch-at-age models to inform estimates of growth as well as composition data [@Lee2019] and has been implemented in a number of stock assessments [e.g., @Mcgilliard2019; @Hulson2022b]. 
-An inherent component to both the ALK and CAAL is the variability in length for a given age, in addition, when using CAAL data as an additional likelihood component to a statistical catch-at-age model one must determine the input sample size to be used to weight this information.
+CAAL data can be used directly within statistical catch-at-age models to inform estimates of growth as well as composition data [@Lee2019] and has been implemented in a number of operational stock assessments [e.g., @Mcgilliard2019; @Hulson2022b]. 
+An intrinsic component to both the ALK and CAAL is the variability in length for a given age.
+Further, when using CAAL data as an additional likelihood component to a statistical catch-at-age model one must determine the input sample size to be used to weight this information.
 
 Despite the acceptance of requiring an input sample size to weight age composition data in statistical catch-at-age models that reflects the added uncertainty caused by overdispersion common to age sampling, and the recognition of the inherent variability in the ageing process when reading otoliths and in the growth process upon which age-length keys are based, these sources of uncertainty have not been previously integrated in an objective estimation method for input sample size. 
 In this study, we use the methods of @Stewart2014 to estimate age composition input sample size that includes both ageing error and growth variability in the estimation process. 
 We show, in a step-wise process, the added variability in age composition sample size from including ageing error and growth variability across a number of species that reflect differing life histories and levels of ageing difficulty. 
-Using a current statistical catch-at-age model that is used for assessment and management as a case study we then show the effects of this added uncertainty on assessment model results.
+Using a current statistical catch-at-age models that are used for assessment and management as case studies we then show the effects of this added uncertainty on assessment model results.
 
 # Methods
 
