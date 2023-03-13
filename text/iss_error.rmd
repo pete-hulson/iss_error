@@ -96,19 +96,20 @@ In this study we used historical data collected from bottom trawl surveys conduc
 Within the AFSC bottom trawl surveys both length frequency data and age specimen data are collected (in addition to other data sources including catch, effort, location, etc.). 
 To facilitate age estimation, individual fish are processed at sea to record sex, length and weight and to remove sagittal otoliths that are sent to the AFSC Age and Growth laboratory for age determination. 
 Periodically, a subset of these otoliths are selected for reader-tester agreement tests, which evaluates the reproducability of an age reading when two different age readers age the same fish, without knowledge of the other reader's age [@Kimura1991]. 
-The average annual bottom trawl survey age sample sizes for the species selected for this analysis by region, along with the total number of otoliths that have been selected for reader-tester agreement tests across these regions is shown in Table \@ref(tab:species_samples)).
-Besides that they are the most frequently sampled species for age, these species were selected because they are all assessed with statistical catch-at-age models that require input sample sizes to 'weight' the age composition data fit in the stock assessment models. 
-Details of how the length frequency and age collections are expanded to population abundance-at-length and age at AFSC to then subsequently used as compositional data in stock assessment models are provided in @Hulson2023b. 
+The average annual bottom trawl survey age sample sizes for the stocks selected for this analysis by region, along with the total number of otoliths that have been selected for reader-tester agreement tests across these regions is shown in Table \@ref(tab:species-samples)).
+The stocks selected to use as examples for this analysis were all stocks that had greater than 5,000 reader-tester paired otolith readings.
+These stocks are also all assessed with statistical catch-at-age models that require input sample sizes to 'weight' the age composition data fit in the stock assessment models. 
+Details of how the length frequency and age collections are expanded to population abundance-at-length and age at AFSC to then subsequently used as compositional data in stock assessment models at AFSC are provided in @Hulson2023b. 
 
 ## Simulation-Bootstrap framework
 
 To evaluate the inclusion of ageing error and growth variability on uncertainty in age compostion datasets we developed a bootstrap-simulation framework that allowed for the addition of these sources of error.
 In simple terms, the simulation framework that we developed resamples the hauls, then lengths and ages collected within the resampled hauls following from the method introduced by @Stewart2014. 
-To implement ageing error, the ages that were resampled are then resampled again based on the reader-tester dataset, that is, for a specific resampled age, the set of tester ages for that reader age were pooled and a new age was resampled from that set. 
-To implement growth variability, for a given resampled age the lengths observed for that age were pooled, and then a new length was resampled from that set of lengths.
+To implement ageing error, for a given resampled age, the set of tester ages for that reader age were pooled and a new age was resampled from that set. 
+To implement growth variability, for a given resampled age the lengths observed for that age were pooled by sex, and then a new length was resampled from that set of lengths.
 The bootstrap-simulation framework is composed of a suite of nested resampling protocols.
 Functions to run the sampling protocols were developed in a compartmentalized manner to provide for substantial flexibility in exploring desired resampling protocols.
-The order of operations (Figure \@ref(fig:bs_flows) *ben - we need to add where we're doing tha geing error and growth resampling to this figure*) has the following schedule, with steps 1-2 and 4-6 being optional switches:
+The order of operations (Figure \@ref(fig:bs_flows) *ben - we need to add where we're doing the ageing error and growth resampling to this figure*) has the following schedule, with steps 1-2 and 4-6 being optional switches:
 
 1.  Resample hauls from the set of hauls with associated catch per unit effort (in numbers)
 2.  Within the resampled hauls from step 1, resample the observed lengths
@@ -122,13 +123,15 @@ The core of the bootstrap-simulation function (steps 5 and 6 above) were designe
 The bootstrap-simulation then repeated steps 1-7 iteratively providing iterated population abundance-at-age that was then compared to the historical (the full sample without any resampling of data) population abundance-at-age determined by the bottom trawl surveys.
 
 We applied the bootstrap-simulation in a step-wise manner to evaluate the consequences of adding each source of additional error to the age composition estimates.  
-First, we ran the bootstrap-simulation with the historical data without adding any extra error, thus, omitting steps 5 and 6 above. 
+First, we ran the bootstrap-simulation with the historical data without adding any extra error, thus, omitting steps 5 and 6 above (termed the 'base' case). 
 Next, we added ageing error and growth variability separately, thus, omitting either step 5 or 6 depending on the source of uncertainty that we wanted to include.
 Finally, we added both ageing error and growth variability to the bootstrap-simulation framework.
 To allow for the largest number of samples from which the consequences of these sources of uncertainty could be evaluated we included reader-tester data that was pooled across these three regions.
-To evaluate the inclusion of growth variability we pooled the age-length pairs across all the years of the survey in order to provide the maximum influence of growth variability on the replicated age composition estimates.
+To evaluate the inclusion of growth variability we pooled the sex-sepcific age-length pairs across all the years of the survey in order to provide the maximum influence of growth variability on the replicated age composition estimates.
 We ran the bootstrap-simulation for 500 iterations, which was a level for which the variability in population abundance-at-age results had stabilizeds.
-The bootstrap-simulation was developed in R [@Rcore] and is available via GitHub as an R package (<https://github.com/BenWilliams-NOAA/swo> *will need to change this to the surveyISS package*).
+The bootstrap-simulation was developed in R [@Rcore] and is available via GitHub as an R package (<https://github.com/BenWilliams-NOAA/surveyISS>).
+
+In order to quantify trends across stocks we computed two statistics... *add eqns here for what is looked at*
 
 ## Computing effective and input sample size
 
@@ -140,13 +143,14 @@ This statistic evaluates the amount of uncertainty in an estimated composition c
  (\#eq:eqn1)
 \end{equation}
 where $E_c$ is the estimated proportion for category-*c* (which can be age or any other arbitrary category across which proportions are computed) and $O_c$ is the observed proportion.
-
 Here, the underlying age composition derived from the historical bottom trawl surveys with the full and unsampled data was treated as the observed proportions $O_c$ in equation \@ref(eq:eqn1).
 For each iteration of the bootstrap-simulation we computed an estimated proportion ($E_c$) that was then compared to the underlying historical age composition ($O_c$) to determine the effective sample size of the resampled age composition.
 Thus, across each iteration of the bootstrap-simulation we computed an effective sample size that indicated the amount of uncertainty in the resampled age composition.
-To summarize effective sample size across iterations we used the harmonic mean, which has been shown to reduce bias in recovering the true sample size in simulations for a multinomial distribution.
-Due to this reduction in bias the harmonic mean has also been recommended to determine the 'input sample size' that is used in stock assessment models to fit compositional data [@Stewart2014].
-Herein, when we use the term 'effective sample size' we are referring to the effective sample sizes that were computed for each iteration of the bootstrap-simulation, when we use the term 'input sample size' we are referring to the harmonic mean of the iterated effective sample sizes.
+
+To summarize effective sample size across iterations we used the harmonic mean, which has been shown to reduce bias in recovering the true sample size in simulations for a multinomial distribution, and due to this reduction in bias the harmonic mean has also been recommended to determine the 'input sample size' that is used in stock assessment models to fit compositional data [@Stewart2014].
+Herein, when we use the term 'effective sample size' we are referring to the effective sample sizes that were computed for each iteration of the bootstrap-simulation, when we use the term 'input sample size' (ISS) we are referring to the harmonic mean of the iterated effective sample sizes.
+While we present the results of the annual ISS for each stock evaluated when incorporating ageing error, growth variability, or both, we also compute the proportion of 'base' ISS in order to present the relative decrease in ISS when incorporating these sources of additional uncertainty.
+The proportion of base ISS is computed by dividing the ISS as determined after incorporating ageing error, growth variability, or both, by the base ISS without these sources of uncertainty.
 
 ## Evaluating life-history relationships to consequences of subsampling
 
@@ -181,8 +185,8 @@ We thank *reviewer1* and *reviewer2* for their helpful reviews of this manuscrip
 
 # Tables
 
-```{r species_sample}
-knitr::kable(vroom::vroom(here::here('tables', 'species_sample.csv')), caption = "Average age samples from the AFSC bottom trawl surveys by region, and total reader-tester age pairs for the species evaluated in the bootstrap-simulation.", align = c('llcccc'), format.args = list(big.mark = ",", scientific = FALSE))
+```{r species-sample}
+knitr::kable(vroom::vroom(here::here('tables', 'species_sample.csv')), caption = "Average age samples from the AFSC bottom trawl surveys by region (rounded to the nearest 10), and total reader-tester age pairs (rounded to the nearest 100) for the species evaluated in the bootstrap-simulation.", align = c('llcccc'), format.args = list(big.mark = ",", scientific = FALSE))
 ```
 
 \newpage
