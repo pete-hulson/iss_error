@@ -121,6 +121,8 @@ err_iss %>%
                      here::here('output', 'afsc_iss_err_full.csv'),
                      delim = ',') -> plot_dat
   
+surv_labs <- c("Aleutian Isalnds", "Eastern Bering Sea Shelf", "Gulf of Alaska")
+names(surv_labs) <- c("ai", "bs", "goa")
 
 # plot age iss with added error ----
 
@@ -180,10 +182,10 @@ plot_dat %>%
 plot_dat_prop_iss %>% 
   tidytable::drop_na() %>% 
   tidytable::filter(species_type != "other") %>% 
-  tidytable::summarise(mean_p = mean(value), .by = c(species_name, species_type, comp_type, err_src, region)) %>%
+  tidytable::summarise(mean_p = mean(value), .by = c(species_name, species_type, comp_type, err_src, surv_labs)) %>%
   ggplot(.,aes(x = species_type, y = mean_p, fill = as.factor(species_type))) +
   geom_boxplot2(width.errorbar = 0) +
-  facet_grid(comp_type ~ factor(err_src, level = c('AE', 'GV', 'AE & GV'))) +
+  facet_grid(surv_labs ~ factor(err_src, level = c('AE', 'GV', 'AE & GV'))) +
   ylab("Proportion of base age composition input sample size") +
   xlab("Species type") +
   scale_fill_scico_d(palette = 'roma',
@@ -198,9 +200,6 @@ ggsave(here::here("figs", "prop_iss_plot.png"),
        height = 6)
 
 # plot iss and nss per haul with added error ----
-
-surv_labs <- c("Aleutian Isalnds", "Eastern Bering Sea Shelf", "Gulf of Alaska")
-names(surv_labs) <- c("ai", "bs", "goa")
 
 plot_dat %>% 
   select(year, species_code, comp_type, ae, ae_al, al, base, nhls, nss, region) %>% 
