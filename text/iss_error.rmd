@@ -109,7 +109,7 @@ To implement ageing error, for a given resampled age, the set of tester ages for
 To implement growth variability, for a given resampled age the lengths observed for that age were pooled by sex, and then a new length was resampled from that set of lengths.
 The bootstrap-simulation framework is composed of a suite of nested resampling protocols.
 Functions to run the sampling protocols were developed in a compartmentalized manner to provide for substantial flexibility in exploring desired resampling protocols.
-The order of operations (Figure \@ref(fig:bs_flows) *ben - we need to add where we're doing the ageing error and growth resampling to this figure*) has the following schedule, with steps 1-2 and 4-6 being optional switches:
+The order of operations (Figure \@ref(fig:bs-flows) *ben - we need to add where we're doing the ageing error and growth resampling to this figure*) has the following schedule, with steps 1-2 and 4-6 being optional switches:
 
 1.  Resample hauls from the set of hauls with associated catch per unit effort (in numbers)
 2.  Within the resampled hauls from step 1, resample the observed lengths
@@ -124,10 +124,10 @@ The bootstrap-simulation then repeated steps 1-7 iteratively providing iterated 
 
 We applied the bootstrap-simulation in a step-wise manner to evaluate the consequences of adding each source of additional error to the age composition estimates.  
 First, we ran the bootstrap-simulation with the historical data without adding any extra error, thus, omitting steps 5 and 6 above (termed the 'base' case). 
-Next, we added ageing error and growth variability separately, thus, omitting either step 5 or 6 depending on the source of uncertainty that we wanted to include.
-Finally, we added both ageing error and growth variability to the bootstrap-simulation framework.
+Next, we added ageing error (termed 'AE') and growth variability (termed 'GV') separately, thus, omitting either step 5 or 6 depending on the source of uncertainty that we wanted to include.
+Finally, we added both ageing error and growth variability (termed 'AE & GV') to the bootstrap-simulation framework.
 To allow for the largest number of samples from which the consequences of these sources of uncertainty could be evaluated we included reader-tester data that was pooled across these three regions.
-To evaluate the inclusion of growth variability we pooled the sex-sepcific age-length pairs across all the years of the survey in order to provide the maximum influence of growth variability on the replicated age composition estimates.
+To evaluate the inclusion of growth variability we pooled the sex-specific age-length pairs across all the years of the survey in order to provide the maximum influence of growth variability on the replicated age composition estimates.
 We ran the bootstrap-simulation for 500 iterations, which was a level for which the variability in population abundance-at-age results had stabilizeds.
 The bootstrap-simulation was developed in R [@Rcore] and is available via GitHub as an R package (<https://github.com/BenWilliams-NOAA/surveyISS>).
 
@@ -158,9 +158,38 @@ The proportion of base ISS is computed by dividing the ISS as determined after i
 
 # Results
 
-[length results for selected species, including samples saved, ess and iss reductions - Pete and Ben/Meaghan]
+While the magnitude of age composition ISS was stock and region specific, the general result that was consistent across the stocks evaluated was a reduction in age composition ISS as additional sources of uncertainty were introduced in the bootstrap procedure (Figure \@ref(fig:iss-plot)).
+This reduction in age composition ISS resulted for both sex-specific and total (combined sex) age composition ISS.
+The relative magnitude of adding ageing error compared to growth variability was also stock and region specific.
+For example, adding ageing error to arrowtooth flounder age data resulted in smaller ISS than adding growth variability in the GOA, but larger ISS in the EBS.
+Variability in the age composition ISS across uncertainty scenarios evaluated was also stock and region specific, where Pacific cod and walleye pollock in the EBS resulted in the largest variability in ISS and AI Atka mackerel resulted in the smallest.
 
-[age results, including ess and iss reductions - Pete and Ben/Meaghan]
+The proportional reduction in age composition ISS compared to the base case across uncertainty scenarios revealed patterns across species types (Figure \@ref(fig:prop-iss)).
+In general, adding ageing error to rockfish data had a larger proportional reduction in age composition ISS than adding growth variability.
+Alternatively, adding growth variability to flatfish and gadid data had a larger proportional reduction in age composition ISS than adding ageing error.
+It was also the case that these proportional reductions across uncertainty scenarios in rockfish ISS were less variable across stocks and regions than for flatfish and gadids.
+Across the sex categories and uncertainty scenarios investigated, the largest variability in the proportional reduction in age composition ISS resulted for gadids.
+Overall, when adding both ageing error and growth variability the ISS resulted in 50-90% of the base age composition ISS for flatfish, 40-85% for gadids, and 80-95% for rockfish.
+
+For each of the uncertainty scenarios investigated the relationship between age composition ISS and the number of sampled hauls was significantly different than one-to-one for each species type evaluated (Figure \@ref(fig:iss-hls)).
+It was also the case that across the uncertainty scenarios investigated there was large variability in the age composition ISS compared to the number of sampled hauls for each species type evaluated.
+While an increasing trend resulted for rockfish and flatfish between age composition ISS and the number of sample hauls, it was generally the case that the age composition ISS was larger than the number of sampled hauls for hauls less than 100-200, and smaller than the number of hauls for hauls larger than 100-200.
+This increasing trend for rockfish and flatfish degraded as additional sources of uncertainty were added, but for each uncertainty case the trend was significantly different than one-to-one.
+In each of the uncertainty scenarios investigated the trend between age composition ISS and the number of hauls for gadids was significantly different than that for rockfish and flatfish, and while there was a slight increase in age composition ISS as the number of hauls increased, it was not as large of an increase as that which resulted for rockfish and flatfish.
+
+For each species type there was a generally increasing trend that resulted between the number of age samples taken per haul and the age composition ISS per sampled haul (top panel of Figure \@ref(fig:iss-nss-hls) *i haven't yet figured out how to match the font in the shared y-axis title with the rest of the figure*).
+However, as sources of uncertainty were added to age data this increasing trend was dampened for each species type.
+This was particularly true for gadids as compared to flatfish and rockfish.
+Across species types the age composition ISS per haul was around half of the number of sampled ages per haul, less for rockfish and gadids.
+The age composition ISS per haul was, on average, the largest for flatfish, followed by rockfish, and was the smallest for gadids (bottom panel of Figure \@ref(fig:iss-nss-hls)).
+The variability in the age composition ISS per haul across years, regions, and sex categories was also the largest for flatfish compared to gadids and rockfish.
+
+Comparing between statistics for ageing error and growth variability resulted in different trends in the proportional reduction of age composition ISS upon comparison across species types (top panels of Figure \@ref(fig:iss-nss-hls)).
+The proportional reduction in age composition ISS when adding ageing error was similar when compared to the average reader-tester CV between gadids and rockfish, where the variability was smaller for rockfish (top left panel of Figure \@ref(fig:iss-nss-hls)).
+While the range in average reader-tester CV was smaller for rockfish and gadids than for flatfish, the resulting range in proportional reduction in age composition ISS for gadids was larger than rockfish and flatfish.
+The proportional reductions in age composition ISS when adding growth variability resulted in the smallest range in both ISS reduction and average age-length CV for rockfish, but had a large range and was quite similar between flatfish and gadids (top right panel of Figure \@ref(fig:iss-nss-hls)).
+On average, the proportional reduction in age composition ISS when adding both ageing error and growth variability was smallest for rockfish, intermediate for flatfish, and largest for gadids (bottom panel of Figure \@ref(fig:iss-nss-hls)).
+The same result occurred when evaluating the range in the proportional reduction in age composition ISS when both ageing error and growth variability were added.
 
 # Discussion
 
@@ -186,13 +215,31 @@ We thank *reviewer1* and *reviewer2* for their helpful reviews of this manuscrip
 # Tables
 
 ```{r species-sample}
-knitr::kable(vroom::vroom(here::here('tables', 'species_sample.csv')), caption = "Average age samples from the AFSC bottom trawl surveys by region (rounded to the nearest 10), and total reader-tester age pairs (rounded to the nearest 100) for the species evaluated in the bootstrap-simulation.", align = c('llcccc'), format.args = list(big.mark = ",", scientific = FALSE))
+knitr::kable(vroom::vroom(here::here('tables', 'species_sample.csv')), 
+             caption = "Average age samples from the AFSC bottom trawl surveys by region (rounded to the nearest 10), and total reader-tester age pairs (rounded to the nearest 100) for the species evaluated in the bootstrap-simulation.", 
+             align = c('llcccc'), format.args = list(big.mark = ",", scientific = FALSE))
 ```
 
 \newpage
 
 # Figures
 
-```{r bs_flows, fig.cap="Bootstrap-simulation flow chart, the steps refer to the order of operations as described in the *Bootstrap-simulation framework* section."}
+```{r bs-flows, fig.cap="Bootstrap-simulation flow chart, the steps refer to the order of operations."}
 knitr::include_graphics(here::here('figs', 'age_flowchart.png'))
+```
+
+```{r iss-plot, fig.cap="Age composition input sample size for the stocks and regions evaluated across uncertainty scenarios."}
+knitr::include_graphics(here::here('figs', 'iss_plot.png'))
+```
+
+```{r prop-iss, fig.cap="Proportion of base case age composition input sample size by species type across sex categories and uncertainty scenarios."}
+knitr::include_graphics(here::here('figs', 'prop_iss_plot.png'))
+```
+
+```{r iss-hls, fig.cap="Age composition input sample size compared to number of sampled hauls across uncertainty scenarios and species types (linear fit by species type shown for illustration)."}
+knitr::include_graphics(here::here('figs', 'iss_hls.png'))
+```
+
+```{r iss-nss-hls, fig.cap="Age composition input sample size per sampled haul compared to number ages sampled within a haul (top panel) across uncertainty scenarios and species types (bottom panel)."}
+knitr::include_graphics(here::here('figs', 'hls_iss_nss.png'))
 ```

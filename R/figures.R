@@ -53,7 +53,7 @@ specimen <- vroom::vroom(here::here('data', 'specimen_ai.csv')) %>%
 
 err_iss <- vroom::vroom(here::here('output', 'afsc_iss_err.csv'))
 
-surv_labs <- c("Aleutian Islands", "Bering Sea Shelf", "Gulf of Alaska")
+surv_labs <- c("Aleutian Islands", "Eastern Bering Sea Shelf", "Gulf of Alaska")
 names(surv_labs) <- c("ai", "bs", "goa")
 
 # add specimen info to iss results
@@ -129,16 +129,16 @@ plot_dat %>%
   tidytable::left_join(spec) %>%
   tidytable::pivot_longer(cols = c(ae, ae_al, al, base)) %>% 
   tidytable::mutate(err_src = case_when(name == 'ae' ~ 'AE',
-                                        name == 'al' ~ 'AL',
-                                        name == 'ae_al' ~ 'AE & AL',
+                                        name == 'al' ~ 'GV',
+                                        name == 'ae_al' ~ 'AE & GV',
                                         name == 'base' ~ 'Base'),
                     surv_labs = case_when(region == 'goa' ~ "Gulf of Alaska",
                                           region == 'ai' ~ "Aleutian Islands",
-                                          region == 'bs' ~ "Bering Sea Shelf"),
+                                          region == 'bs' ~ "Eastern Bering Sea Shelf"),
                     err_src = factor(err_src)) -> plot_dat_iss
 
 plot_dat_iss %>% 
-  ggplot(., aes(x = factor(err_src, level = c('Base', 'AE', 'AL', 'AE & AL')), 
+  ggplot(., aes(x = factor(err_src, level = c('Base', 'AE', 'GV', 'AE & GV')), 
                 y = value, 
                 fill = comp_type)) +
   geom_boxplot2(width.errorbar = 0) +
@@ -147,7 +147,7 @@ plot_dat_iss %>%
              labeller = label_wrap_gen(10)) +
   theme(legend.position = "bottom",
         axis.text.x = element_text(angle = -45, hjust = 0),
-        text = element_text(size = 11)) +
+        text = element_text(size = 10)) +
   xlab("Uncertainty scenario") +
   ylab("Age composition input sample size") +
   scale_fill_scico_d(palette = 'roma',
@@ -170,11 +170,11 @@ plot_dat %>%
                     prop_ae_al = ae_al / base) %>% 
   tidytable::pivot_longer(cols = c(prop_ae, prop_ae_al, prop_al)) %>% 
   tidytable::mutate(err_src = case_when(name == 'prop_ae' ~ 'AE',
-                                        name == 'prop_al' ~ 'AL',
-                                        name == 'prop_ae_al' ~ 'AE & AL'),
+                                        name == 'prop_al' ~ 'GV',
+                                        name == 'prop_ae_al' ~ 'AE & GV'),
   surv_labs = case_when(region == 'goa' ~ "Gulf of Alaska",
                         region == 'ai' ~ "Aleutian Islands",
-                        region == 'bs' ~ "Bering Sea Shelf"),
+                        region == 'bs' ~ "Eastern Bering Sea Shelf"),
   err_src = factor(err_src)) -> plot_dat_prop_iss
 
 plot_dat_prop_iss %>% 
@@ -183,7 +183,7 @@ plot_dat_prop_iss %>%
   tidytable::summarise(mean_p = mean(value), .by = c(species_name, species_type, comp_type, err_src, region)) %>%
   ggplot(.,aes(x = species_type, y = mean_p, fill = as.factor(species_type))) +
   geom_boxplot2(width.errorbar = 0) +
-  facet_grid(comp_type ~ factor(err_src, level = c('AE', 'AL', 'AE & AL'))) +
+  facet_grid(comp_type ~ factor(err_src, level = c('AE', 'GV', 'AE & GV'))) +
   ylab("Proportion of base age composition input sample size") +
   xlab("Species type") +
   scale_fill_scico_d(palette = 'roma',
@@ -199,7 +199,7 @@ ggsave(here::here("figs", "prop_iss_plot.png"),
 
 # plot iss and nss per haul with added error ----
 
-surv_labs <- c("Aleutian Isalnds", "Bering Sea Shelf", "Gulf of Alaska")
+surv_labs <- c("Aleutian Isalnds", "Eastern Bering Sea Shelf", "Gulf of Alaska")
 names(surv_labs) <- c("ai", "bs", "goa")
 
 plot_dat %>% 
@@ -212,12 +212,12 @@ plot_dat %>%
                     n_hl = nss/ nhls) %>% 
   tidytable::pivot_longer(cols = c(ae_hl, al_hl, ae_al_hl, base_hl)) %>% 
   tidytable::mutate(err_src = case_when(name == 'ae_hl' ~ 'AE',
-                                        name == 'al_hl' ~ 'AL',
-                                        name == 'ae_al_hl' ~ 'AE & AL',
+                                        name == 'al_hl' ~ 'GV',
+                                        name == 'ae_al_hl' ~ 'AE & GV',
                                         name == 'base_hl' ~ 'Base'),
                     surv_labs = case_when(region == 'goa' ~ "Gulf of Alaska",
                                           region == 'ai' ~ "Aleutian Islands",
-                                          region == 'bs' ~ "Bering Sea Shelf"),
+                                          region == 'bs' ~ "Eastern Bering Sea Shelf"),
                     err_src = factor(err_src),
                     surv_labs = factor(surv_labs)) %>% 
   tidytable::filter(species_type != 'other') -> hls_dat
@@ -232,7 +232,7 @@ hls_dat %>%
                type = "norm",
                geom = "polygon") +
   scale_shape_manual(values=seq(0,14)) +
-  facet_grid( ~ factor(err_src, level = c('Base', 'AE', 'AL', 'AE & AL')),
+  facet_grid( ~ factor(err_src, level = c('Base', 'AE', 'GV', 'AE & GV')),
              labeller = labeller(region = surv_labs)) +
   geom_abline(slope = 1, intercept = 0, colour = "black", xintercept = 1) +
   geom_abline(slope = 0, intercept = 1, colour = "black") +
@@ -256,7 +256,7 @@ hls_dat %>%
                        uci_hl = quantile(value, probs = 0.975), .by = c(species_type, err_src)) %>% 
   ggplot(.,aes(x = species_type, y = mean_hl, fill = as.factor(species_type))) +
   geom_bar(stat = "identity") +
-  facet_grid( ~ factor(err_src, level = c('Base', 'AE', 'AL', 'AE & AL'))) +
+  facet_grid( ~ factor(err_src, level = c('Base', 'AE', 'GV', 'AE & GV'))) +
   xlab("Number of age samples per sampled haul") +
   ylab("Age composition input sample size per sampled haul") +
   labs(pch = "Stock") +
@@ -297,11 +297,11 @@ plot_dat %>%
                     prop_ae_al = ae_al / base) %>% 
   tidytable::pivot_longer(cols = c(prop_ae, prop_ae_al, prop_al)) %>% 
   tidytable::mutate(err_src = case_when(name == 'prop_ae' ~ 'AE',
-                                        name == 'prop_al' ~ 'AL',
-                                        name == 'prop_ae_al' ~ 'AE & AL'),
+                                        name == 'prop_al' ~ 'GV',
+                                        name == 'prop_ae_al' ~ 'AE & GV'),
                     surv_labs = case_when(region == 'goa' ~ "Gulf of Alaska",
                                           region == 'ai' ~ "Aleutian Islands",
-                                          region == 'bs' ~ "Bering Sea Shelf"),
+                                          region == 'bs' ~ "Eastern Bering Sea Shelf"),
                     err_src = factor(err_src)) -> plot_dat_ape
 
 
@@ -328,7 +328,7 @@ plot_dat_ape %>%
 
 
 plot_dat_ape %>% 
-  tidytable::filter(err_src == 'AL', species_type != 'other') %>% 
+  tidytable::filter(err_src == 'GV', species_type != 'other') %>% 
   tidytable::summarise(mean_ae = mean(value, na.r = TRUE), .by = c(species_name, species_type, sd_l, cv_l, region)) %>% 
   ggplot(.,aes(x = cv_l, y = mean_ae, color = as.factor(species_type))) +
   geom_point() +
@@ -339,7 +339,7 @@ plot_dat_ape %>%
                type = "norm",
                geom = "polygon") +
   xlab("Average age-length CV") +
-  ylab("AL") +
+  ylab("GV") +
   scale_color_scico_d(palette = 'roma',
                       name = "Species type") + 
   scale_fill_scico_d(palette = 'roma',
@@ -349,13 +349,13 @@ plot_dat_ape %>%
 
 
 plot_dat_ape %>% 
-  tidytable::filter(err_src == 'AE & AL', species_type != 'other') %>% 
+  tidytable::filter(err_src == 'AE & GV', species_type != 'other') %>% 
   tidytable::summarise(mean_ae = mean(value, na.rm = TRUE),
                        lci_hl = quantile(value, probs = 0.025, na.rm = TRUE),
                        uci_hl = quantile(value, probs = 0.975, na.rm = TRUE), .by = c(species_name, species_type)) %>% 
   ggplot(.,aes(x = reorder(species_name, -mean_ae), y = mean_ae, fill = as.factor(species_type))) +
   geom_bar(stat = "identity") +
-  ylab("AE & AL") +
+  ylab("AE & GV") +
   scale_fill_scico_d(palette = 'roma',
                      name = "") + 
   theme(text = element_text(size = 10),
@@ -383,7 +383,7 @@ p4 <- ggdraw() +
   draw_plot(p3a, x = 0, y = 0, width = 1, height = 0.5) +
   draw_plot(legend, x = 0, y = 0.44, width = 1, height = 0.05)
 
-ggsave(here::here("figs", "ape_sdl.png"),
+ggsave(here::here("figs", "ae_gv_stats.png"),
        p4,
        device = "png",
        width = 7,
@@ -392,13 +392,29 @@ ggsave(here::here("figs", "ape_sdl.png"),
 
 # plot iss relationship with hauls ----
 
+plot_dat %>% 
+  select(year, species_code, comp_type, ae, ae_al, al, base, nhls, nss, region) %>% 
+  tidytable::left_join(spec) %>% 
+  tidytable::pivot_longer(cols = c(ae, al, ae_al, base)) %>% 
+  tidytable::mutate(err_src = case_when(name == 'ae' ~ 'AE',
+                                        name == 'al' ~ 'GV',
+                                        name == 'ae_al' ~ 'AE & GV',
+                                        name == 'base' ~ 'Base'),
+                    surv_labs = case_when(region == 'goa' ~ "Gulf of Alaska",
+                                          region == 'ai' ~ "Aleutian Islands",
+                                          region == 'bs' ~ "Eastern Bering Sea Shelf"),
+                    err_src = factor(err_src),
+                    surv_labs = factor(surv_labs)) %>% 
+  tidytable::filter(species_type != 'other') -> plot_dat_hls
+
+
 plot_dat_hls %>% 
   tidytable::filter(species_type != 'other') %>% 
   ggplot(.,aes(x = nhls, y = value, color = as.factor(species_type))) +
   geom_point() +
   xlab("Number of sampled hauls") +
-  ylab("Input sample size") +
-  facet_wrap(~ factor(err_src, level = c('Base', 'AE', 'AL', 'AE & AL'))) +
+  ylab("Age composition input sample size") +
+  facet_wrap(~ factor(err_src, level = c('Base', 'AE', 'GV', 'AE & GV'))) +
   geom_abline(slope = 1, intercept = 0, colour = "black", xintercept = 1) +
   scale_color_scico_d(palette = 'roma',
                       name = "Species type") + 
@@ -407,7 +423,7 @@ plot_dat_hls %>%
   theme(text = element_text(size = 14),
         legend.position = "bottom") +
   geom_smooth(method = "lm", 
-              se = F) +
+              se = T) +
   ylim(0,300) +
   xlim(0,300) -> iss_hls
 
@@ -416,3 +432,4 @@ ggsave(here::here("figs", "iss_hls.png"),
        device = "png",
        width = 7,
        height = 6)
+
