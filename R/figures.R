@@ -85,26 +85,32 @@ r_t %>%
   tidytable::filter(read_age > 0) %>% 
   tidytable::mutate(diff = abs(read_age - test_age) / read_age) %>% 
   tidytable::summarise(ape1 = sum(diff),
-                       R = length(diff), .by = c(species_code, read_age)) %>% 
+                       R = length(diff),
+                       cv_a = sd(test_age) / read_age, .by = c(species_code, read_age)) %>% 
   tidytable::summarise(ape2 = sum(ape1 / R),
-                       N = sum(R), .by = c(species_code)) %>% 
+                       N = sum(R),
+                       cv_a = mean(cv_a, na.rm = TRUE), .by = c(species_code)) %>% 
   tidytable::mutate(ape = 100 * ape2 / N) %>% 
-  tidytable::select(species_code, ape) -> ape
+  tidytable::select(species_code, ape, cv_a) -> ape
 
 specimen %>% 
   tidytable::drop_na() %>% 
-  tidytable::summarise(sd_l1 = sd(length), .by = c(species_code, sex, region, age)) %>%
+  tidytable::summarise(sd_l1 = sd(length),
+                       cv_l = sd(length) / mean(length), .by = c(species_code, sex, region, age)) %>%
   tidytable::drop_na() %>% 
-  tidytable::summarise(sd_l = mean(sd_l1), .by = c(species_code, sex, region)) %>% 
+  tidytable::summarise(sd_l = mean(sd_l1),
+                       cv_l = mean(cv_l), .by = c(species_code, sex, region)) %>% 
   tidytable::filter(sex != 3) %>% 
   tidytable::mutate(comp_type = case_when (sex == 1 ~ 'male',
                                            sex == 2 ~ 'female')) %>% 
   tidytable::select(-sex) %>% 
   tidytable::bind_rows(specimen %>% 
                          tidytable::drop_na() %>% 
-                         tidytable::summarise(sd_l1 = sd(length), .by = c(species_code, region, age)) %>%
+                         tidytable::summarise(sd_l1 = sd(length),
+                                              cv_l = sd(length) / mean(length), .by = c(species_code, region, age)) %>%
                          tidytable::drop_na() %>% 
-                         tidytable::summarise(sd_l = mean(sd_l1), .by = c(species_code, region)) %>% 
+                         tidytable::summarise(sd_l = mean(sd_l1),
+                                              cv_l = mean(cv_l), .by = c(species_code, region)) %>% 
                          tidytable::mutate(comp_type = 'total')) -> sd_l
 
 err_iss %>% 
@@ -301,41 +307,112 @@ plot_dat %>%
 
 
 plot_dat_ape %>% 
-  tidytable::filter(err_src == 'AL') %>% 
-  ggplot(.,aes(x = sd_l, y = value, color = as.factor(species_type), fill = as.factor(species_name))) +
-  geom_boxplot2(width.errorbar = 0) +
+  tidytable::filter(err_src == 'AE', species_type != 'other') %>% 
+  tidytable::summarise(mean_ae = mean(value, na.r = TRUE), .by = c(species_name, species_type, ape, cv_a, comp_type, region)) %>% 
+  ggplot(.,aes(x = cv_a, y = mean_ae, color = as.factor(species_type))) +
   geom_point() +
-  stat_ellipse(aes(fill = species_type, 
-                   color = species_type), 
-               alpha = 0.25, 
+  stat_ellipse(aes(fill = species_type,
+                   color = species_type),
+               alpha = 0.25,
                level = 0.95,
                type = "norm",
                geom = "polygon") +
-  scale_shape_manual(values=seq(0,14)) +
-  facet_grid( ~ factor(err_src, level = c('Base', 'AE', 'AL', 'AE & AL')),
-              labeller = labeller(region = surv_labs)) +
-  geom_abline(slope = 1, intercept = 0, colour = "black", xintercept = 1) +
-  geom_abline(slope = 0, intercept = 1, colour = "black") +
-  xlab("Number of age samples per sampled haul") +
-  ylab("Age composition input sample size per sampled haul") +
-  labs(pch = "Stock") +
-  # geom_smooth(method = 'lm', se = T) +
+  xlab("Average reader-tester CV") +
+  ylab("AE") +
   scale_color_scico_d(palette = 'roma',
                       name = "Species type") + 
   scale_fill_scico_d(palette = 'roma',
                      name = "Species type") + 
-  theme(text = element_text(size = 14)) 
+  theme(text = element_text(size = 10),
+        legend.position = "none") -> p1
 
 
+plot_dat_ape %>% 
+  tidytable::filter(err_src == 'AL', species_type != 'other') %>% 
+  tidytable::summarise(mean_ae = mean(value, na.r = TRUE), .by = c(species_name, species_type, sd_l, cv_l, region)) %>% 
+  ggplot(.,aes(x = cv_l, y = mean_ae, color = as.factor(species_type))) +
+  geom_point() +
+  stat_ellipse(aes(fill = species_type,
+                   color = species_type),
+               alpha = 0.25,
+               level = 0.95,
+               type = "norm",
+               geom = "polygon") +
+  xlab("Average age-length CV") +
+  ylab("AL") +
+  scale_color_scico_d(palette = 'roma',
+                      name = "Species type") + 
+  scale_fill_scico_d(palette = 'roma',
+                     name = "Species type") + 
+  theme(text = element_text(size = 10),
+        legend.position = "none") -> p2
 
 
+plot_dat_ape %>% 
+  tidytable::filter(err_src == 'AE & AL', species_type != 'other') %>% 
+  tidytable::summarise(mean_ae = mean(value, na.rm = TRUE),
+                       lci_hl = quantile(value, probs = 0.025, na.rm = TRUE),
+                       uci_hl = quantile(value, probs = 0.975, na.rm = TRUE), .by = c(species_name, species_type)) %>% 
+  ggplot(.,aes(x = reorder(species_name, -mean_ae), y = mean_ae, fill = as.factor(species_type))) +
+  geom_bar(stat = "identity") +
+  ylab("AE & AL") +
+  scale_fill_scico_d(palette = 'roma',
+                     name = "") + 
+  theme(text = element_text(size = 10),
+        axis.text.x = element_text(angle = -45, hjust = 0),
+        axis.title.x = element_blank(),
+        legend.position = "bottom") +
+  geom_errorbar(aes(x = reorder(species_name, mean_ae), ymin = lci_hl, ymax = uci_hl), width = 0) +
+  ylim(0, 1.3) -> p3
+
+p3 +
+  theme(legend.position = "none") -> p3a
+
+get_legend<-function(myggplot){
+  tmp <- ggplot_gtable(ggplot_build(myggplot))
+  leg <- which(sapply(tmp$grobs, function(x) x$name) == "guide-box")
+  legend <- tmp$grobs[[leg]]
+  return(legend)
+}
+
+legend <- get_legend(p3)
+
+p4 <- ggdraw() +
+  draw_plot(p1, x = 0, y = .5, width = .5, height = .5) +
+  draw_plot(p2, x = .5, y = .5, width = .5, height = .5) +
+  draw_plot(p3a, x = 0, y = 0, width = 1, height = 0.5) +
+  draw_plot(legend, x = 0, y = 0.44, width = 1, height = 0.05)
+
+ggsave(here::here("figs", "ape_sdl.png"),
+       p4,
+       device = "png",
+       width = 7,
+       height = 6)
 
 
+# plot iss relationship with hauls ----
 
+plot_dat_hls %>% 
+  tidytable::filter(species_type != 'other') %>% 
+  ggplot(.,aes(x = nhls, y = value, color = as.factor(species_type))) +
+  geom_point() +
+  xlab("Number of sampled hauls") +
+  ylab("Input sample size") +
+  facet_wrap(~ factor(err_src, level = c('Base', 'AE', 'AL', 'AE & AL'))) +
+  geom_abline(slope = 1, intercept = 0, colour = "black", xintercept = 1) +
+  scale_color_scico_d(palette = 'roma',
+                      name = "Species type") + 
+  scale_fill_scico_d(palette = 'roma',
+                     name = "Species type") + 
+  theme(text = element_text(size = 14),
+        legend.position = "bottom") +
+  geom_smooth(method = "lm", 
+              se = F) +
+  ylim(0,300) +
+  xlim(0,300) -> iss_hls
 
-
-
-
-
-
-
+ggsave(here::here("figs", "iss_hls.png"),
+       iss_hls,
+       device = "png",
+       width = 7,
+       height = 6)
