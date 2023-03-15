@@ -40,87 +40,92 @@ ggplot2::theme_set(
 
 # pull in output ----
 
-spec <- vroom::vroom(here::here('data', 'species_code_name.csv')) # species_code and common names
-
-r_t <- vroom::vroom(here::here('data', 'reader_tester.csv'))
-
-specimen <- vroom::vroom(here::here('data', 'specimen_ai.csv')) %>% 
-  tidytable::mutate(region = 'ai') %>% 
-  tidytable::bind_rows(vroom::vroom(here::here('data', 'specimen_bs.csv')) %>% 
-                         tidytable::mutate(region = 'bs')) %>% 
-  tidytable::bind_rows(vroom::vroom(here::here('data', 'specimen_goa.csv')) %>% 
-                         tidytable::mutate(region = 'goa'))
-
-err_iss <- vroom::vroom(here::here('output', 'afsc_iss_err.csv'))
-
-surv_labs <- c("Aleutian Islands", "Eastern Bering Sea Shelf", "Gulf of Alaska")
-names(surv_labs) <- c("ai", "bs", "goa")
-
-# add specimen info to iss results
-
-specimen %>% 
-  tidytable::drop_na() %>% 
-  tidytable::summarise(nhls = length(unique(hauljoin)),
-                       nss = length(age), .by = c(year, species_code, region, sex)) %>% 
-  tidytable::filter(sex != 3) %>% 
-  tidytable::mutate(comp_type = case_when (sex == 1 ~ 'male',
-                                           sex == 2 ~ 'female')) %>% 
-  tidytable::select(-sex) %>% 
-  tidytable::bind_rows(specimen %>% 
-                         tidytable::drop_na() %>% 
-                         tidytable::summarise(nhls = length(unique(hauljoin)),
-                                              nss = length(age), .by = c(year, species_code, region, sex)) %>% 
-                         tidytable::summarise(nhls = sum(nhls),
-                                              nss = sum(nss), .by = c(year, species_code, region)) %>% 
-                         tidytable::mutate(comp_type = 'total')) -> samp_dat
-
-species = unique(err_iss$species_code)
-
-r_t %>% 
-  tidytable::filter(species_code %in% species,
-                    Region %in% c('AI', 'BS', 'BS/AI', 'BS_GOA', 'BSAI', 'BSGOA', 'GOA')) %>% 
-  dplyr::rename_all(tolower) %>% 
-  tidytable::select(species_code, read_age, test_age) %>% 
-  tidytable::drop_na() %>% 
-  tidytable::filter(read_age > 0) %>% 
-  tidytable::mutate(diff = abs(read_age - test_age) / read_age) %>% 
-  tidytable::summarise(ape1 = sum(diff),
-                       R = length(diff),
-                       cv_a = sd(test_age) / read_age, .by = c(species_code, read_age)) %>% 
-  tidytable::summarise(ape2 = sum(ape1 / R),
-                       N = sum(R),
-                       cv_a = mean(cv_a, na.rm = TRUE), .by = c(species_code)) %>% 
-  tidytable::mutate(ape = 100 * ape2 / N) %>% 
-  tidytable::select(species_code, ape, cv_a) -> ape
-
-specimen %>% 
-  tidytable::drop_na() %>% 
-  tidytable::summarise(sd_l1 = sd(length),
-                       cv_l = sd(length) / mean(length), .by = c(species_code, sex, region, age)) %>%
-  tidytable::drop_na() %>% 
-  tidytable::summarise(sd_l = mean(sd_l1),
-                       cv_l = mean(cv_l), .by = c(species_code, sex, region)) %>% 
-  tidytable::filter(sex != 3) %>% 
-  tidytable::mutate(comp_type = case_when (sex == 1 ~ 'male',
-                                           sex == 2 ~ 'female')) %>% 
-  tidytable::select(-sex) %>% 
-  tidytable::bind_rows(specimen %>% 
-                         tidytable::drop_na() %>% 
-                         tidytable::summarise(sd_l1 = sd(length),
-                                              cv_l = sd(length) / mean(length), .by = c(species_code, region, age)) %>%
-                         tidytable::drop_na() %>% 
-                         tidytable::summarise(sd_l = mean(sd_l1),
-                                              cv_l = mean(cv_l), .by = c(species_code, region)) %>% 
-                         tidytable::mutate(comp_type = 'total')) -> sd_l
-
-err_iss %>% 
-  tidytable::left_join(samp_dat) %>% 
-  tidytable::left_join(ape) %>% 
-  tidytable::left_join(sd_l) %>% 
-  vroom::vroom_write(.,
-                     here::here('output', 'afsc_iss_err_full.csv'),
-                     delim = ',') -> plot_dat
+if(!file.exists(here::here('output', 'afsc_iss_err_full.csv'))){
   
+  spec <- vroom::vroom(here::here('data', 'species_code_name.csv')) # species_code and common names
+  
+  r_t <- vroom::vroom(here::here('data', 'reader_tester.csv'))
+  
+  specimen <- vroom::vroom(here::here('data', 'specimen_ai.csv')) %>% 
+    tidytable::mutate(region = 'ai') %>% 
+    tidytable::bind_rows(vroom::vroom(here::here('data', 'specimen_bs.csv')) %>% 
+                           tidytable::mutate(region = 'bs')) %>% 
+    tidytable::bind_rows(vroom::vroom(here::here('data', 'specimen_goa.csv')) %>% 
+                           tidytable::mutate(region = 'goa'))
+  
+  err_iss <- vroom::vroom(here::here('output', 'afsc_iss_err.csv'))
+  
+  surv_labs <- c("Aleutian Islands", "Eastern Bering Sea Shelf", "Gulf of Alaska")
+  names(surv_labs) <- c("ai", "bs", "goa")
+  
+  # add specimen info to iss results
+  
+  specimen %>% 
+    tidytable::drop_na() %>% 
+    tidytable::summarise(nhls = length(unique(hauljoin)),
+                         nss = length(age), .by = c(year, species_code, region, sex)) %>% 
+    tidytable::filter(sex != 3) %>% 
+    tidytable::mutate(comp_type = case_when (sex == 1 ~ 'male',
+                                             sex == 2 ~ 'female')) %>% 
+    tidytable::select(-sex) %>% 
+    tidytable::bind_rows(specimen %>% 
+                           tidytable::drop_na() %>% 
+                           tidytable::summarise(nhls = length(unique(hauljoin)),
+                                                nss = length(age), .by = c(year, species_code, region, sex)) %>% 
+                           tidytable::summarise(nhls = sum(nhls),
+                                                nss = sum(nss), .by = c(year, species_code, region)) %>% 
+                           tidytable::mutate(comp_type = 'total')) -> samp_dat
+  
+  species = unique(err_iss$species_code)
+  
+  r_t %>% 
+    tidytable::filter(species_code %in% species,
+                      Region %in% c('AI', 'BS', 'BS/AI', 'BS_GOA', 'BSAI', 'BSGOA', 'GOA')) %>% 
+    dplyr::rename_all(tolower) %>% 
+    tidytable::select(species_code, read_age, test_age) %>% 
+    tidytable::drop_na() %>% 
+    tidytable::filter(read_age > 0) %>% 
+    tidytable::mutate(diff = abs(read_age - test_age) / read_age) %>% 
+    tidytable::summarise(ape1 = sum(diff),
+                         R = length(diff),
+                         cv_a = sd(test_age) / read_age, .by = c(species_code, read_age)) %>% 
+    tidytable::summarise(ape2 = sum(ape1 / R),
+                         N = sum(R),
+                         cv_a = mean(cv_a, na.rm = TRUE), .by = c(species_code)) %>% 
+    tidytable::mutate(ape = 100 * ape2 / N) %>% 
+    tidytable::select(species_code, ape, cv_a) -> ape
+  
+  specimen %>% 
+    tidytable::drop_na() %>% 
+    tidytable::summarise(sd_l1 = sd(length),
+                         cv_l = sd(length) / mean(length), .by = c(species_code, sex, region, age)) %>%
+    tidytable::drop_na() %>% 
+    tidytable::summarise(sd_l = mean(sd_l1),
+                         cv_l = mean(cv_l), .by = c(species_code, sex, region)) %>% 
+    tidytable::filter(sex != 3) %>% 
+    tidytable::mutate(comp_type = case_when (sex == 1 ~ 'male',
+                                             sex == 2 ~ 'female')) %>% 
+    tidytable::select(-sex) %>% 
+    tidytable::bind_rows(specimen %>% 
+                           tidytable::drop_na() %>% 
+                           tidytable::summarise(sd_l1 = sd(length),
+                                                cv_l = sd(length) / mean(length), .by = c(species_code, region, age)) %>%
+                           tidytable::drop_na() %>% 
+                           tidytable::summarise(sd_l = mean(sd_l1),
+                                                cv_l = mean(cv_l), .by = c(species_code, region)) %>% 
+                           tidytable::mutate(comp_type = 'total')) -> sd_l
+  
+  err_iss %>% 
+    tidytable::left_join(samp_dat) %>% 
+    tidytable::left_join(ape) %>% 
+    tidytable::left_join(sd_l) %>% 
+    vroom::vroom_write(.,
+                       here::here('output', 'afsc_iss_err_full.csv'),
+                       delim = ',') -> plot_dat
+} else{
+  plot_dat <- vroom::vroom(here::here('output', 'afsc_iss_err_full.csv'))
+}
+
 surv_labs <- c("Aleutian Isalnds", "Eastern Bering Sea Shelf", "Gulf of Alaska")
 names(surv_labs) <- c("ai", "bs", "goa")
 
@@ -174,10 +179,10 @@ plot_dat %>%
   tidytable::mutate(err_src = case_when(name == 'prop_ae' ~ 'AE',
                                         name == 'prop_al' ~ 'GV',
                                         name == 'prop_ae_al' ~ 'AE & GV'),
-  surv_labs = case_when(region == 'goa' ~ "Gulf of Alaska",
-                        region == 'ai' ~ "Aleutian Islands",
-                        region == 'bs' ~ "Eastern Bering Sea Shelf"),
-  err_src = factor(err_src)) -> plot_dat_prop_iss
+                    surv_labs = case_when(region == 'goa' ~ "Gulf of Alaska",
+                                          region == 'ai' ~ "Aleutian Islands",
+                                          region == 'bs' ~ "Eastern Bering Sea Shelf"),
+                    err_src = factor(err_src)) -> plot_dat_prop_iss
 
 plot_dat_prop_iss %>% 
   tidytable::drop_na() %>% 
@@ -232,7 +237,7 @@ hls_dat %>%
                geom = "polygon") +
   scale_shape_manual(values=seq(0,14)) +
   facet_grid( ~ factor(err_src, level = c('Base', 'AE', 'GV', 'AE & GV')),
-             labeller = labeller(region = surv_labs)) +
+              labeller = labeller(region = surv_labs)) +
   geom_abline(slope = 1, intercept = 0, colour = "black", xintercept = 1) +
   geom_abline(slope = 0, intercept = 1, colour = "black") +
   xlab("Number of age samples per sampled haul") +
@@ -241,7 +246,7 @@ hls_dat %>%
   scale_color_scico_d(palette = 'roma',
                       name = "Species type") + 
   scale_fill_scico_d(palette = 'roma',
-                      name = "Species type") + 
+                     name = "Species type") + 
   theme(text = element_text(size = 14),
         strip.text = element_blank(),
         legend.position = "none",
