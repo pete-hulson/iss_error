@@ -199,10 +199,77 @@ The same trend resulted when evaluating the range in the proportional reduction 
 # Discussion
 
 [Summary para of main results]
+- adding error in bootstrap decreased age comp ISS for all stocks
+- impact of error source was species type specific, rocfish ageing error more influnetial than growth varability, other way around for flatfish and gadids
+- due to larger growth variability for gadids and flatfish compared to rockfish
+- ageing error effects not surprising for rockfish, since they are so long-lived, but the average CV for reader-tester agreement was much larger for some flatfish stocks as compared to the rockfish stocks evaluated here
+- when adding both sources of uncertainty, largest effect on gadids, middle for flatfish, and least effect on rockfish, but was stock and region specific
 
-[Cost-benefit of precision compared to survey injuries]
+[what does this mean?]
+- understanding effects of survey reduction effort has recently been focused on
+- recent study looks at reductions in length frequency and age collection effort, using afsc bottom trawl survey as example
+- found that reduction in age collections had larger effect on flatfish and rockfish as compared to gadids
+- her we find that adding uncertainty sources has largest effect on gadids, and smallest on rockfish, potentially the case that the effect of decreases in sampling effort for gadids and flatfish would be smaller given the magnitude of effect by these sources of uncertainty as compared to rockfish
+- however, this should be evaluated in future studies
 
-[Still thinking on other paras]
+[implications of decrease in iss]
+- it is well known that misspecification of iss can lead to bias results in assessment model predictions
+- here we show that for gadids there is upwards of a 50% decrease in iss when adding the additional uncertainty as compared to the base case, an upwards of 40% decrease for flatfish, and an upwards of 20% decrease for rockfish
+- without these additional sources of uncertainty taken into account, using the bootstrap procedure would result in iss that are larger than what they potentially should be
+- did not look at implications to assessment outcomes, but it can be inferred that reductions of iss on this scale would have downstream effects on model predictions and the uncertainty associated with them
+- these sources of uncertainty would not be contained only to fishery-independent sources, like evaluated here, but would also be inherent to age collections for fishery-dependent sources as well
+- future investigating impacts to assessment model results should also include fishery-dependent iss implciations as well
+
+[relationship with hauls]
+- a number of operational assessment models use hauls as a proxy in some form for iss [barbeaux, hulson]
+- this result is derived from pennington papers of an iss of one fish per haul
+- in these series of papers they investigated length frequency sampling and based on the level of intra-haul correlation determined that for the species that were investigated, on average, the iss was one fish per haul
+- however, the conclusion that was made in penninton 2002 was not that the number of hauls should be used as a proxy for iss, but rather, that in order to potentially increase the iss and have a better estimate of the level of intra-haul correlation that samples should be taken from an increased number of hauls
+- this result was substantiated in siskey, who also suggested that increasing teh number of hauls while decreasing the sampling effort on any given haul was preferrable to increasing the sampling effort within any given haul
+
+[implications as it pertains to hauls]
+- in this study, we find that the relationship between iss and the number of hauls to be extremely weak
+- while the magnitude of iss and the number of sampled hauls is on the same scale, there was not a one-to-one relationship that resulted for any of the stocks or species types evaluated
+- further, there was extreme variability when comparing between the number of sampled hauls and the resulting bootstrapped iss for all of the uncertainty scenarios investigated here
+- compared to the bootstrap results, it was found that for all the species types evaluated, that if hauls were used as a proxy for iss in an assessment model the iss would be an underestimate for sampled hauls less than around 100, and an overestimate for hauls greater than around 100
+- it is the case that, based on the results of pennington 2002, that sampling effort at afsc has transitioned to sampling an increased number of hauls rather than increasing sampling in any given haul, thus, in recent time-series using hauls as a proxy for iss is likely an over-estiamte of iss as compared to the bootstrap results
+
+[recommendation as it pertains to hauls]
+- there are several advantages to using the bootsrap procedure introduced here, that follows from stewart, to determine iss for composition data used in stock assessment models
+- the primary advantage is that this procedure accounts for the sampling design employed to collect data, and thus, implicetly includes the interannual heterogeneity in sampling effort
+- one could argue that the number of sampled hauls can be used as a proxy for this heterogeneity in sampling effort, and we would agree, but also add that the number of hauls itself does not account for the interannual heterogeneity in intra-haul correlation, which can be large and based on the changes in population demographics (i.e., large recruitment events or changes in composition structure from year to year)
+- thus, we recommend that the use of hauls as a proxy for iss be discontinued in stock assessment, and rather, assessment scientists consider implementing a bootstrap procedure as shown here to use for setting iss in stock assessment models
+- as suggested in stewart, we agree that the bootstrap iss can be used in a stock assessment model as the 'maximum' sample size
+
+[implications of adding additional sources of error]
+- previous work has investigated both the inclusion of ageing error (punt) and growth (caal) within stock assessment models, however, none have applied these additional sources of uncertainty in the context of iss
+- as it pertains to ageing error, in many current assessments an ageing error matrix is implemented (e.g., assessment ref) in order to account for ageing error that is inherent to the age composition data
+- use of an ageing error matrix effectively 'smudges' assessment model estimates of population at age into adjacent age classes prior to fitting the age composition input data
+- then, in the model fitting step, an iss is used to fit the models 'smudged' estimates of age composition to the 'observed' age compostion, whether from fishery-dependent or fishery-independent sources
+- here we argue that unless ageing error is account for in the iss used to fit these data then we are likely 'over-fitting' the model estimates to the observed age composition and that use of an ageing error matrix only half-way accounts for this source of uncertainty in the assessment modeling process
+- the results from this study suggest that in some cases the addition of ageing error to the bootstrap method decreases the iss be 20-40%, thus, an iss that does not take into account this source of uncertainty can be 125-165% too large
+
+[implications of adding additional sources of error cont]
+- it is commonly the case that age composition is produced through a two-stage expansion process, in which length frequency data is expanded ro population-at-length in the first stage, and an ALK is used to expand population-at-length to population-at-age in the second stage (ref)
+- in the second-stage, the ALK is produced through the use of age-length paired data that are obtained in the age sampling process, and within the ALK the variability in length-at-age is accounted for
+- however, there have been no previous attempts to include this source of variability when considering the iss that is used to fit the expanded age composition data
+- we find that the magnitude of effect on iss is species type dependenet, in which a larger effect results for species that exhibit larger variability in growth, for example, gadids and flatfish compared to rockfish
+- when implementing growth variability there was a 10-50% decrease in the magnitude of bootstraped iss, thus, if not taking this source of uncertainty into account the iss can be up to 200% too large
+
+[conclusion para]
+- Overall, we find that including ageing error and growth variaiblity into estimation of input sample size can have large effect in reducing the magnitude of iss
+- we provide three primary recommendations from this work
+- first, we recommend that the use of hauls as a proxy for iss in stock assessment models be discontinued
+- we did not find any relationship between the bootstrap iss and hauls for any species, rather, we found that using hauls will likely lead to either an over or under-estimation of iss, with the former potentially haveing greater implications to model results (francis ref)
+- second, we recommend that stock assessment scientists consider the use of bootstrap methods like this one (which was built from stewart) to set iss for compositional data
+- with modern computing power, for a single species using the package we built it takes on the matter of a couple of hours to bootstrap iss for a historical time series, for a simgle year it takes a matter of minutes
+- third, fo all estimates of iss we recommend implmenting ageing error and growth variability to more explicetly take these sources of uncertainty into account in stock assessment models
+- we note that while we used fishery-independent data here as an example, that these sources of uncertainty would also be inherent to fishery-depednent data
+
+[future work]
+- what are the consequences of reductions in age sampling effort when taking these sources of uncertainty into account?
+- what are the consequences to specific assessments?
+
 
 # Acknowledgments
 
