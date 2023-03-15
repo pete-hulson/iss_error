@@ -86,7 +86,6 @@ Further, when using CAAL data as an additional likelihood component to a statist
 Despite the acceptance of requiring an input sample size to weight age composition data in statistical catch-at-age models that reflects the added uncertainty caused by overdispersion common to age sampling, and the recognition of the inherent variability in the ageing process when reading otoliths and in the growth process upon which age-length keys are based, these sources of uncertainty have not been previously integrated in an objective estimation method for input sample size. 
 In this study, we use the methods of @Stewart2014 to estimate age composition input sample size that includes both ageing error and growth variability in the estimation process. 
 We show, in a step-wise process, the added variability in age composition sample size from including ageing error and growth variability across a number of species that reflect differing life histories and levels of ageing difficulty. 
-Using a current statistical catch-at-age models that are used for assessment and management as case studies we then show the effects of this added uncertainty on assessment model results.
 
 # Methods
 
