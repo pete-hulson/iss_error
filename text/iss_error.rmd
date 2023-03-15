@@ -41,15 +41,11 @@ source(here::here('R', "render_toc.R"))
 
 # Abstract
 
-*Why are you doing this? [context and aim]*
-
-*What did you do? [methods]*
-
-*What did you find? [core results – say something useful – no motherhood statements or deference to the main text!]*
-
-*What does this mean? [interpretation in context]*
-
-*What is it good for? [application]*
+Input sample size is a quantity that is used to weight composition data in stock assessment models, however, previous methods to determine input sample size do not explicitly include various sources of uncertainty that are inherent to age composition data.
+In this study, we evaluate the impact of including ageing error and growth variability within bootstrap methods that estimate age composition input sample size.
+We find that for all the stocks evaluated the input sample size determined from bootstrap methods decreased as these addition sources of uncertainty were included, indicating that there is more uncertainty within age composition data than would be accounted for with input sample size estimates that do not include these sources of uncertainty.
+We argue that current methods to set input sample size at the number of hauls should be discontinued due to lack of relationship between input sample size and the number of hauls.
+The method and results provided here allow for assessment scientist to weight age composition with input sample size that takes into account ageing error and growth variability that are implicit to any expanded age composition from either fishery-independent or fishery-dependent sources; this has not previously been investigated.
 
 \newpage
 
