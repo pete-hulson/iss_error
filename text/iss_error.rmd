@@ -51,11 +51,13 @@ The method and results provided here allow for assessment scientist to weight ag
 
 # Introduction
 
-Compositional information on age and length comprise critical data products used in statistical catch-at-age assessment models, as they facilitate the tracking of year classes and size-structure over time and improve our understanding of the population dynamics [@QuinnDeriso1999]. 
-There are two primary sources for age and length composition data used in statistical catch-at-age models: fishery-independent sources, which include some level of randomized and standardized collection of samples in a non-targeted framework, and fishery-dependent sources, in which collection of age and length samples are also randomized at some level but are obtained from hauls that are not random but rather targeted within a specific fishery. 
-Regardless of the source of age and length composition data, it is commonly accepted that overdispersion of collections are inherent to the data due to intra-haul correlation [e.g., @Pennington2000]. 
-The concept of 'effective sample size' has since been developed, that is smaller than the sample size collected, to reflect the increased uncertainty due to this overdispersion [e.g., @Mcallister1997]. 
-Since modern statistical catch-at-age stock assessment models integrate multiple sources of data related to catch (e.g., fisheries catch-per-unit-effort, survey indices of abundance), life history (e.g., size-at-age, maturity-at-age, selectivity-at-age), and composition (e.g., length and age), it is imperative to consider the relative information content these data products provide to the model employed. 
+Compositional information on age and length are critical data products used in statistical catch-at-age assessment models as they facilitate the tracking of year classes and size-structure over time and improve our understanding of the population dynamics [@QuinnDeriso1999]. 
+The two primary sources for age and length composition data are fishery independent and fishery dependent. 
+Fishery-independent sources typically include some level of randomized and standardized collection of samples from hauls in a non-targeted framework.
+Fishery-dependent sources are based upon collection of age and length samples, randomized at some level, but obtained from hauls targeting a specific species or fishery. 
+Regardless of the source of composition data, it is commonly accepted that overdispersion of the data is inherent due to intra-haul correlation [e.g., @Pennington2000]. 
+The concept of 'effective sample size' has been developed and implemented to reflect the increased uncertainty due to this overdispersion [e.g., @Mcallister1997], effective sample sizes are by design smaller than the collection sample size. 
+Since contemporary statistical catch-at-age stock assessment models integrate multiple sources of data related to catch (e.g., fisheries catch-per-unit-effort, survey indices of abundance), life history (e.g., size-at-age, maturity-at-age, selectivity-at-age), and composition, it is imperative to consider the relative information content these data products provide to the model employed. 
 
 Because fisheries often depend on the periodic production of strong year-classes and subsequent recruitment into fishery catch, sampling efforts for age and length data, scaling of these data to the population level ('compositional expansion'), and the weight assigned to these data products in assessment models are highly important in order to provide accurate advice for management. 
 This is often handled through the use of data-weighting methods, checking the fit of compositional data in the model, and ensuring a good match between the variance of the data and the variance implied by the model [@Francis2017]. 
@@ -74,7 +76,7 @@ As described previously, the input sample size selected would reflect the variab
 
 In the process of compositional expansion, it is often the case that an age-length key (ALK) is employed to expand population numbers-at-length to population numbers-at-age [@Ailloud2019]. 
 It is through the age-length key, and the subsequent age expansion, that observations of age composition are derived from fishery-independent and fishery-dependent sources. 
-Conditional age-at-length (CAAL), in which paired age-length data are used as in indication of the age distribution for a specific length, is used to inform length-at-age and it's related uncertainty [@Taylor2013]. 
+Conditional age-at-length (CAAL), in which paired age-length data are used as an indication of the age distribution for a specific length, is used to inform length-at-age and it's related uncertainty [@Taylor2013]. 
 CAAL data can be used directly within statistical catch-at-age models to inform estimates of growth as well as composition data [@Lee2019] and has been implemented in a number of operational stock assessments [e.g., @Mcgilliard2019; @Hulson2022]. 
 An intrinsic component to both the ALK and CAAL is the variability in length for a given age.
 Further, when using CAAL data as an additional likelihood component to a statistical catch-at-age model one must determine the input sample size to be used to weight this information.
@@ -88,9 +90,9 @@ We show, in a step-wise process, the added variability in age composition sample
 ## Data: age collections and reader-tester agreement
 
 In this study we used historical data collected from bottom trawl surveys conducted by the Alaska Fisheries Science Center (AFSC) in the Eastern Bering Sea [EBS: @Lauth2019], Aleutian Islands [AI: @vonSzalay2017], and Gulf of Alaska [GOA: @vonSzalay2018]. 
-Within the AFSC bottom trawl surveys both length frequency data and age specimen data are collected (in addition to other data sources including catch, effort, location, etc.). 
-To facilitate age estimation, individual fish are processed at sea to record sex, length and weight and to remove sagittal otoliths that are sent to the AFSC Age and Growth laboratory for age determination. 
-Periodically, a subset of these otoliths are selected for reader-tester agreement tests, which evaluates the reproducability of an age reading when two different age readers age the same fish, without knowledge of the other reader's determined age of the otolith [@Kimura1991]. 
+Within the AFSC bottom trawl surveys both length frequency data and age specimen data are collected in addition to other survey data (e.g., catch, effort, location, etc.). 
+A subsample of fish from each haul are processed at sea to collect their sex, length, and weight. A subsample of these fish have their sagittal otoliths collected, these otoliths are sent (with haul and specimen data) to the AFSC Age and Growth laboratory for age determination. 
+Periodically, a subset of these otoliths are selected for reader-tester agreement tests, which is used to evaluate the reproducability of an age reading when two different readers age the same fish, without knowledge of the other reader's age determination of the otolith [@Kimura1991]. 
 The average annual bottom trawl survey age sample sizes for the stocks selected for this analysis by region, along with the total number of otoliths that have been selected for reader-tester agreement tests across these regions is shown in Table \@ref(tab:species-samples)).
 The stocks selected to use as examples for this analysis were all stocks that had greater than 5,000 reader-tester paired otolith readings.
 These stocks are also all assessed with statistical catch-at-age models that require input sample sizes to 'weight' the age composition data fit in the stock assessment models. 
@@ -116,7 +118,7 @@ The order of operations (Figure \@ref(fig:bs-flows) *ben - we need to add where 
 7.  With the resampled age data in steps 4-6 and the population abundance-at-length in step 3, calculate the population abundance-at-age
 
 The core of the bootstrap-simulation function (steps 5 and 6 above) were designed to explore inclusion of ageing error and growth variability.
-The bootstrap-simulation then repeated steps 1-7 iteratively providing iterated population abundance-at-age that was then compared to the historical (the full sample without any resampling of data) population abundance-at-age determined by the bottom trawl surveys.
+The bootstrap-simulation repeats steps 1-7 iteratively providing iterated population abundance-at-age that was then compared to the historical (the full sample without any resampling of data) population abundance-at-age determined by the bottom trawl surveys.
 
 We applied the bootstrap-simulation in a step-wise manner to evaluate the consequences of adding each source of additional error to the age composition estimates across what we term 'uncertainty scenarios'.
 First, we ran the bootstrap-simulation with the historical data without adding any extra error, thus, omitting steps 5 and 6 above (termed the 'Base' scenario). 
