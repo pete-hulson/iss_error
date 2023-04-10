@@ -51,13 +51,17 @@ The method and results provided here allow for assessment scientist to weight ag
 
 # Introduction
 
-Compositional information on age and length are critical data products used in statistical catch-at-age assessment models as they facilitate the tracking of year classes and size-structure over time and improve our understanding of the population dynamics [@QuinnDeriso1999]. 
-The two primary sources for age and length composition data are fishery independent and fishery dependent. 
+Compositional information on age and length are critical data products used in statistical catch-at-age assessment models as they facilitate the tracking of year classes and size-structure over time as well as facilitate our understanding of a fish stock's population dynamics [@QuinnDeriso1999]. 
+The two primary sources for age and length composition data are fishery-independent and fishery-dependent. 
 Fishery-independent sources typically include some level of randomized and standardized collection of samples from hauls in a non-targeted framework.
 Fishery-dependent sources are based upon collection of age and length samples, randomized at some level, but obtained from hauls targeting a specific species or fishery. 
 Regardless of the source of composition data, it is commonly accepted that overdispersion of the data is inherent due to intra-haul correlation [e.g., @Pennington2000]. 
-The concept of 'effective sample size' has been developed and implemented to reflect the increased uncertainty due to this overdispersion [e.g., @Mcallister1997], effective sample sizes are by design smaller than the collection sample size. 
+A reduced sample size [effective sample size; @Mcallister1997] is implemented to account for the increased uncertainty due to overdispersion. 
 Since contemporary statistical catch-at-age stock assessment models integrate multiple sources of data related to catch (e.g., fisheries catch-per-unit-effort, survey indices of abundance), life history (e.g., size-at-age, maturity-at-age, selectivity-at-age), and composition, it is imperative to consider the relative information content these data products provide to the model employed. 
+
+Due to the strong influence that compositional data can have in statistical catch-at-age assessment models, the weight assigned to these data products are important for providing accurate advice for management.
+Data-weighting methods, to ensure congruence between the variance of the data and the variance implied by the model [@Francis2017], are used to check the fit of compositional data. 
+The weight assigned to annual compositions (the 'input sample size') can follow a myriad of methods (e.g., fixed values as in @Monnahan2021, number of samples or tows sampled upon as in @Hulson2021 or @Spencer2022, bootstrapping compositions as in @Stewart2014). 
 
 Because fisheries often depend on the periodic production of strong year-classes and subsequent recruitment into fishery catch, sampling efforts for age and length data, scaling of these data to the population level ('compositional expansion'), and the weight assigned to these data products in assessment models are highly important in order to provide accurate advice for management. 
 This is often handled through the use of data-weighting methods, checking the fit of compositional data in the model, and ensuring a good match between the variance of the data and the variance implied by the model [@Francis2017]. 
