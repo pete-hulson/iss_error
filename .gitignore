@@ -2,7 +2,6 @@
 .Rhistory
 .RData
 .Ruserdata
-/dev
 output/ai/
 output/bs/
 output/goa/
