@@ -163,34 +163,39 @@ While the magnitude of age composition ISS was stock and region specific, the ge
 This reduction in age composition ISS resulted for both sex-specific and total (combined sex) age composition ISS.
 The relative magnitude of adding ageing error compared to growth variability was also stock and region specific.
 For example, adding ageing error to arrowtooth flounder age data resulted in smaller ISS than adding growth variability in the GOA, but larger ISS in the EBS.
-Variability in the age composition ISS across uncertainty scenarios evaluated was also stock and region specific, where Pacific cod and walleye pollock in the EBS resulted in the largest variability in ISS and AI Atka mackerel resulted in the smallest.
+Variability in the age composition ISS across the scenarios evaluated was also stock and region specific, with Pacific cod and walleye pollock in the EBS having the greatest reduction in ISS and AI Atka mackerel having the least.
 
-The proportional reduction in age composition ISS compared to the base case across uncertainty scenarios revealed patterns across species types within each region evaluated (Figure \@ref(fig:prop-iss)).
-In general, including ageing error in rockfish age data had a larger proportional reduction in age composition ISS than including growth variability.
-Alternatively, adding growth variability to flatfish and gadid data had a larger proportional reduction in age composition ISS than adding ageing error.
-Across the regions and uncertainty scenarios investigated, the largest variability in the proportional reduction in age composition ISS in any given region resulted for flatfish.
-Across the regions and uncertainty scenarios investigated, the largest range among the reduction in region-specific age composition ISS when adding additional sources of error resulted for gadids.
-For example, after adding both ageing error and growth variability the proportional reduction in age composition ISS was 85-95% of base ISS for gadids in the AI, 40-50% for gadids in the EBS, and 70-80% for gadids in the GOA.
-Overall, when adding both ageing error and growth variability across the regions evaluated the age composition ISS resulted in 50-90% of the base age composition ISS for flatfish, 40-90% for gadids, and 80-95% for rockfish.
+The age composition relative ISS across uncertainty scenarios revealed patterns across species types within each region evaluated (Figure \@ref(fig:prop-iss)).
+Including ageing error for rockfish had a larger proportional reduction in relative ISS than including growth variability.
+However, growth variability had a larger proportional reduction for flatfish and gadid relative ISS than adding ageing error.
+Flatfish exhibited the greatest variability in the proportional reduction in relative ISS in any given region, while gadids had the smallest relative ISS, in general.
+For example, after adding ageing error and growth variability the relative ISS for gadid was 85-95% in the AI, 40-50% in the EBS, and 70-80% in the GOA (Figure \@ref(fig:prop-iss)).
+Overall, adding both ageing error and growth variability decreased the relative ISS to 50-90% of the Base ISS for flatfish, 40-90% for gadids, and 80-95% for rockfish.
 
-For each of the uncertainty scenarios investigated the relationship between age composition ISS and the number of sampled hauls was not one-to-one for any of the species type evaluated (Figure \@ref(fig:iss-hls)).
-It was also the case that across the uncertainty scenarios investigated there was large variability in the age composition ISS compared to the number of sampled hauls for each species type evaluated, and any trend was difficult to distinguish.
-While an increasing trend resulted for rockfish and flatfish between age composition ISS and the number of sample hauls when fitting a linear model to the data, it was generally the case that the age composition ISS was larger than the number of sampled hauls for hauls less than 100-200, and smaller than the number of hauls for hauls larger than 100-200.
-This increasing trend for rockfish and flatfish degraded as additional sources of uncertainty were added, but for each uncertainty case the trend was not one-to-one.
-In each of the uncertainty scenarios investigated the trend between age composition ISS and the number of hauls for gadids was different than that for rockfish and flatfish, and while there was a slight increase in age composition ISS as the number of hauls increased, it was not as large of an increase as that which resulted for rockfish and flatfish.
+<!-- For each of the uncertainty scenarios investigated the relationship between age composition ISS and the number of sampled hauls was not one-to-one for any of the species type evaluated (Figure \@ref(fig:iss-hls)). -->
+<!-- It was also the case that across the uncertainty scenarios investigated there was large variability in the age composition ISS compared to the number of sampled hauls for each species type evaluated, and any trend was difficult to distinguish. -->
+<!-- While an increasing trend resulted for rockfish and flatfish between age composition ISS and the number of sample hauls when fitting a linear model to the data, it was generally the case that the age composition ISS was larger than the number of sampled hauls for hauls less than 100-200, and smaller than the number of hauls for hauls larger than 100-200. -->
+<!-- This increasing trend for rockfish and flatfish degraded as additional sources of uncertainty were added, but for each uncertainty case the trend was not one-to-one. -->
+<!-- In each of the uncertainty scenarios investigated the trend between age composition ISS and the number of hauls for gadids was different than that for rockfish and flatfish, and while there was a slight increase in age composition ISS as the number of hauls increased, it was not as large of an increase as that which resulted for rockfish and flatfish. -->
 
-For each species type there was a generally increasing trend that resulted between the number of age samples taken per haul and the age composition ISS per sampled haul (top panel of Figure \@ref(fig:iss-nss-hls) *i haven't yet figured out how to match the font in the shared y-axis title with the rest of the figure*).
-However, as sources of uncertainty were added to age data this increasing trend was dampened for each species type; this was particularly true for gadids as compared to flatfish and rockfish.
+<!-- The relationship between age composition ISS and the number of sampled hauls was not one-to-one for any of the species type evaluated (Figure \@ref(fig:iss-hls)). -->
+<!-- Further, across uncertainty scenarios, there was large variability in the ISS compared to the number of sampled hauls for each species type evaluated, no clear pattern or trend was distinguishable. -->
+<!-- While an increasing trend resulted for rockfish and flatfish between age composition ISS and the number of sample hauls when fitting a linear model to the data, it was generally the case that the age composition ISS was larger than the number of sampled hauls for hauls less than 100-200, and smaller than the number of hauls for hauls larger than 100-200. **Flag - May want to revisit some of this?**  -->
+<!-- This increasing trend for rockfish and flatfish degraded as additional sources of uncertainty were added, but for each uncertainty case the trend was not one-to-one. -->
+<!-- In each of the uncertainty scenarios investigated the trend between age composition ISS and the number of hauls for gadids was different than that for rockfish and flatfish, and while there was a slight increase in age composition ISS as the number of hauls increased, it was not as large of an increase as that which resulted for rockfish and flatfish. -->
+
+A positive relationship is observed, by species group, between the number of age samples taken per haul and the age composition ISS per sampled haul (top panel of Figure \@ref(fig:iss-nss-hls)).
+However, as sources of uncertainty were added to age data this positive trend was dampened for each species type; this was particularly true for gadids as compared to flatfish and rockfish.
 Across species types the age composition ISS per haul was around half of the number of sampled ages per haul, less for rockfish and gadids.
 The age composition ISS per haul was, on average, the largest for flatfish, followed by rockfish, and was the smallest for gadids (bottom panel of Figure \@ref(fig:iss-nss-hls)).
 The variability in the age composition ISS per haul across years, regions, and sex categories was also the largest for flatfish compared to gadids and rockfish.
 
-Comparing between statistics for ageing error and growth variability resulted in different trends in the proportional reduction of age composition ISS upon comparison across species types (top panels of Figure \@ref(fig:ae-gv-stats)).
-The proportional reduction in age composition ISS when adding ageing error was similar when compared to the average reader-tester CV between gadids and rockfish, where the variability was smaller for rockfish (top left panel of Figure \@ref(fig:ae-gv-stats)).
-While the range in average reader-tester CV was smaller for rockfish and gadids than for flatfish, the resulting range in proportional reduction in age composition ISS for gadids was larger than rockfish and flatfish.
-The proportional reductions in age composition ISS when adding growth variability resulted in the smallest range in both ISS reduction and average age-length CV for rockfish, but had a large range and was quite similar between flatfish and gadids (top right panel of Figure \@ref(fig:ae-gv-stats)).
-On average, the proportional reduction in age composition ISS when adding both ageing error and growth variability was smallest for rockfish, intermediate for flatfish, and largest for gadids (bottom panel of Figure \@ref(fig:ae-gv-stats)).
-The same trend resulted when evaluating the range in the proportional reduction in age composition ISS when both ageing error and growth variability were added.
+Comparing between statistics for ageing error and growth variability resulted in different trends in the relative ISS by species types (top panels of Figure \@ref(fig:ae-gv-stats)).
+The relative ISS when adding ageing error was similar when compared to the average reader-tester CV between gadids and rockfish, with lower variability for rockfish (top left panel of Figure \@ref(fig:ae-gv-stats)).
+While the range in average reader-tester CV was smaller for rockfish and gadids than for flatfish, the resulting range in relative ISS was larger for gadids than rockfish or flatfish.
+The relative ISS when adding growth variability resulted in the smallest range in both ISS reduction and average age-length CV for rockfish, though flatfish and gadid had a larger CV spread (top right panel of Figure \@ref(fig:ae-gv-stats)).
+On average, the relative ISS when adding both ageing error and growth variability was largest for rockfish, intermediate for flatfish, and smallest for gadids (bottom panel of Figure \@ref(fig:ae-gv-stats)).
+The same trend resulted when evaluating the range in the relative ISS when both ageing error and growth variability were added.
 
 # Discussion
 
@@ -281,21 +286,17 @@ knitr::include_graphics(here::here('figs', 'age_flowchart.png'))
 ```
 
 ```{r iss-plot, fig.cap="Age composition input sample size for the stocks and regions evaluated across uncertainty scenarios."}
-knitr::include_graphics(here::here('figs', 'iss_plot.png'))
+knitr::include_graphics(here::here('figs', 'alt_iss.png'))
 ```
 
-```{r prop-iss, fig.cap="Proportion of base case age composition input sample size by species type across sex categories and uncertainty scenarios."}
-knitr::include_graphics(here::here('figs', 'prop_iss_plot.png'))
-```
-
-```{r iss-hls, fig.cap="Age composition input sample size compared to number of sampled hauls across uncertainty scenarios and species types (linear fit by species type shown for illustration)."}
-knitr::include_graphics(here::here('figs', 'iss_hls.png'))
+```{r prop-iss, fig.cap="Age composition relative input sample size by species type across sex categories and uncertainty scenarios."}
+knitr::include_graphics(here::here('figs', 'alt_prop-iss.png'))
 ```
 
 ```{r iss-nss-hls, fig.cap="Age composition input sample size per sampled haul compared to number ages sampled within a haul (top panel) across uncertainty scenarios and species types (bottom panel)."}
-knitr::include_graphics(here::here('figs', 'hls_iss_nss.png'))
+knitr::include_graphics(here::here('figs', 'alt_hls-iss-nss.png'))
 ```
 
-```{r ae-gv-stats, fig.cap="Proportional reduction in age composition input sample size compared to age and growth statistics (top panel) and across stocks evaluated (bottom panel)."}
-knitr::include_graphics(here::here('figs', 'ae_gv_stats.png'))
+```{r ae-gv-stats, fig.cap="Age composition relative input sample size compared to age and growth statistics (top panel) and across stocks evaluated (bottom panel)."}
+knitr::include_graphics(here::here('figs', 'alt_ae-gv-stats.png'))
 ```
