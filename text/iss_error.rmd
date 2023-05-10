@@ -41,12 +41,13 @@ source(here::here('R', "render_toc.R"))
 
 # Abstract
 
-Input sample size is a quantity that is used to weight composition data in stock assessment models.
-Both design-based bootstrap and model-based estimators have been proposed, however, these methods to determine input sample size do not explicitly include sources of uncertainty from ageing error and growth variability that are inherent to expanded age composition data.
-In this study, we evaluate the impact of including ageing error and growth variability within bootstrap methods that estimate age composition input sample size.
-We find that for all the stocks evaluated the input sample size determined from bootstrap methods decreased as these addition sources of uncertainty were included (*add %increase?*), indicating that there is more uncertainty within age composition data than would be accounted for with input sample size estimates that do not include these sources of uncertainty.
-*We argue that current methods to set input sample size at the number of hauls should be discontinued due to the lack of a statistically significant relationship between input sample size and the number of hauls.*
-The method and results provided here allow for assessment scientist to weight age composition with input sample size that takes into account ageing error and growth variability that are implicit to any expanded age composition from either fishery-independent or fishery-dependent sources; this has not previously been investigated.
+Input sample size (ISS) is a quantity that is used to weight composition data in stock assessment models.
+Both design-based bootstrap and model-based estimators have been proposed, however, these previous methods to determine ISS do not explicitly include sources of uncertainty from ageing error and growth variability that are inherent to expanded age composition data.
+In this study, we evaluate the impact of including ageing error and growth variability within bootstrap methods that estimate age composition ISS.
+We find that for all the stocks evaluated the ISS determined from bootstrap methods decreased as these addition sources of uncertainty were included.
+The decrease in ISS was species type specific, but generally decreased up to 40% when ageing error was introduced, up to 50% when growth variability was included, and up to 60% when both sources of uncertainty were included.
+These results indicate that there is more uncertainty within age composition data than would be accounted for with ISS estimates that do not include these sources of uncertainty.
+The method and results provided here allow for assessment scientist to weight age composition with ISS that takes into account ageing error and growth variability that are implicit to any expanded age composition from either fishery-independent or fishery-dependent sources; this has not previously been investigated.
 
 \newpage
 
