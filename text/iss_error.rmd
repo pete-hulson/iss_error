@@ -199,11 +199,12 @@ The same trend resulted when evaluating the range in the relative ISS when both 
 
 # Discussion
 
-In this study we found that adding sources of uncertainty that account for ageing error and growth variability in bootstrap procedures decreased age composition ISS for all stocks included in this analysis.
-The impact of the sources of uncertainty on resulting ISS was species type specific, where ageing error was more influential for rockfish than growth variability, and growth variability was more infleuntial than ageing error for flatfish and gadids.
-We propose that these results are due to larger growth variability found in gadids and flatfish compared to rockfish.
-Further, the effects of ageing error are not surprising for rockfish, since they are so long-lived, but the average CV for reader-tester agreement was much larger for some flatfish stocks as compared to the rockfish stocks evaluated, thus, there was some interaction between the number of age bins and ISS in this analysis.
-Upon adding both sources of uncertainty, generally the largest effect on reduction in ISS magnitude resulted for gadids, was intermediate for flatfish, and had the least effect on rockfish, but was stock and region specific.
+In this study we find that accounting for ageing error and growth variability using bootstrap procedures decreased age composition ISS for all stocks examined.
+The impact of the sources of uncertainty on resulting ISS was species type specific, with ageing error being more influential for rockfish than growth variability, and growth variability more influential than ageing error for flatfish and gadids.
+We propose that these results are due to larger growth variability observed in gadids and flatfish compared to rockfish.
+Further, the effects of ageing error are not unexpected for rockfish, as they are so long-lived. 
+However, the average CV for reader-tester agreement was much larger for some flatfish stocks relative to the rockfish stocks evaluated, thus, there was some interaction between the number of age bins and ISS in this analysis.
+When considering both ageing error and growth uncertainty the largest reduction in ISS magnitude was for gadids, followed by flatfish, with the least effect observed for rockfish, though results varies by stock and region.
 
 Understanding effects of survey reduction effort has recently been the focus of a number of studies [@ICES2020; @ICES2023], as survey reductions may be inevitable in many regions.
 A recent study investigated the reductions in length frequency and age collection effort, using AFSC bottom trawl survey as example [@Hulson2023c] and found that reduction in age collections had larger effect on flatfish and rockfish as compared to gadids.
@@ -221,18 +222,19 @@ A number of operational assessment models use hauls as a proxy in some form when
 This is derived from a result found in @Pennington2002 who investigated length frequency sampling and, based on the level of intra-haul correlation, determined that for the species that were investigated, on average, the ISS was one fish per haul
 However, we note that the conclusion made in @Pennington2002 was not that the number of hauls should be used as a proxy for ISS in the assessment model data fitting procedure, but rather, that in order to potentially increase the ISS and have a better estimate of the level of intra-haul correlation that samples should be taken from an increased number of hauls.
 This result was further substantiated in @Siskey2022, who also suggested that increasing the number of hauls while decreasing the sampling effort on any given haul was preferable to increasing the sampling effort within any given haul at the expense of sampling from a greater number of hauls.
+Here we find that the age composition ISS per haul was dependent on the species type, had a large range depending on the type of error included in determining ISS, and was generally larger than one fish per haul.
 
-In this study, we find that the relationship between age composition ISS and the number of hauls to be extremely weak, if non-existent.
-While the magnitude of ISS and the number of sampled hauls is on a similar relative magnitude scale, there was not a one-to-one relationship that resulted for any of the stocks or species types evaluated.
-Further, we found that there was extreme variability when comparing between the number of sampled hauls and the resulting bootstrapped ISS for all of the uncertainty scenarios investigated here, and only became worse as the additional uncertainty sources were added to the bootstrap.
-Compared to the bootstrap results, it was found that for all the species types evaluated, that if hauls were used as a proxy for ISS in an assessment model the ISS would be an underestimate for sampled hauls less than around 100, and an overestimate for hauls greater than around 100.
-It is the case that, based on the results of @Pennington2002, that sampling effort at AFSC has transitioned to sampling an increased number of hauls rather than increasing sampling in any given haul, thus, in recent time-series using hauls as a proxy for ISS is likely an over-estimate of ISS as compared to the bootstrap results.
+<!-- In this study, we find that the relationship between age composition ISS and the number of hauls to be extremely weak, if non-existent. -->
+<!-- While the magnitude of ISS and the number of sampled hauls is on a similar relative magnitude scale, there was not a one-to-one relationship that resulted for any of the stocks or species types evaluated. -->
+<!-- Further, we found that there was extreme variability when comparing between the number of sampled hauls and the resulting bootstrapped ISS for all of the uncertainty scenarios investigated here, and only became worse as the additional uncertainty sources were added to the bootstrap. -->
+<!-- Compared to the bootstrap results, it was found that for all the species types evaluated, that if hauls were used as a proxy for ISS in an assessment model the ISS would be an underestimate for sampled hauls less than around 100, and an overestimate for hauls greater than around 100. -->
+<!-- It is the case that, based on the results of @Pennington2002, that sampling effort at AFSC has transitioned to sampling an increased number of hauls rather than increasing sampling in any given haul, thus, in recent time-series using hauls as a proxy for ISS is likely an over-estimate of ISS as compared to the bootstrap results. -->
 
-There are several advantages to using the bootstrap procedure introduced here, that follows from @Stewart2014, to determine ISS for composition data used in stock assessment models.
-The primary advantage is that this procedure accounts for the sampling design employed to collect data, and thus, implicitly includes the inter annual heterogeneity in sampling effort.
-One could argue that the number of sampled hauls can be used as a proxy for this heterogeneity in sampling effort, and we would agree, but also add that the number of hauls itself does not account for the inter annual heterogeneity in intra-haul correlation, which can be large and based on the changes in population demographics (i.e., large recruitment events or changes in composition structure from year to year).
-Thus, we recommend that the use of hauls as a proxy for ISS be discontinued when using stock assessment models to fit age and length composition data, and rather, assessment scientists consider implementing a bootstrap procedure as shown here to use for setting ISS.
-As suggested in @Stewart2014, we agree that the bootstrap ISS can be used in a stock assessment model as the 'maximum' sample size.
+<!-- There are several advantages to using the bootstrap procedure introduced here, that expands on the method introduced in @Stewart2014, to determine ISS for composition data used in stock assessment models. -->
+<!-- The primary advantage is that this procedure accounts for the sampling design employed to collect data, and thus, implicitly includes the inter annual heterogeneity in sampling effort. -->
+<!-- One could argue that the number of sampled hauls can be used as a proxy for this heterogeneity in sampling effort, and we would agree, but also add that the number of hauls itself does not account for the inter annual heterogeneity in intra-haul correlation, which can be large and based on the changes in population demographics (i.e., large recruitment events or changes in composition structure from year to year). -->
+<!-- Thus, we recommend that the use of hauls as a proxy for ISS be discontinued when using stock assessment models to fit age and length composition data, and rather, assessment scientists consider implementing a bootstrap procedure as shown here to use for setting ISS. -->
+<!-- As suggested in @Stewart2014, we agree that the bootstrap ISS can be used in a stock assessment model as the 'maximum' sample size. -->
 
 Previous work has investigated both the inclusion of ageing error [@Punt2008; @Liao2013] and growth [@Taylor2013] within stock assessment models, however, none have applied these additional sources of uncertainty in the context of estimating ISS.
 As it pertains to ageing error, in many current assessments an ageing error matrix is implemented [e.g., @Williams2022] in order to account for ageing error that is inherent to the age composition data.
@@ -247,13 +249,11 @@ However, there have been no previous attempts to include this source of variabil
 We find that the magnitude of effect on age composition ISS is species type dependent, in which a larger effect results for species that exhibit larger variability in growth, for example, gadids and flatfish compared to rockfish.
 When implementing growth variability there was a 10-50% decrease in the magnitude of bootstrapped age composition ISS, thus, if not taking this source of uncertainty into account the ISS can be up to 200% too large.
 
-Overall, we find that including ageing error and growth variability into estimation of age composition ISS can have large effect in reducing the magnitude of ISS.
-We provide three primary recommendations from this work.
-First, we recommend that the use of hauls as a proxy for age or length composition ISS in stock assessment models be discontinued.
-While we found that the scale of age composition ISS and hauls were similar, we did not find any relationship between the bootstrap ISS and hauls for any species that would suggest using hauls as a proxy, rather, we found that using hauls will likely lead to either an over- or under-estimation of ISS, with the former potentially having greater implications to model results [@Francis2011].
-Second, we recommend that stock assessment scientists consider the use of bootstrap methods like this one [which was developed from @Stewart2017] to set and and length composition ISS.
+Overall, we find that expanding upon the method introduced by @Stewart2017 by including ageing error and growth variability into estimation of age composition ISS can have large effect in reducing the magnitude of ISS.
+We provide two primary recommendations from this work.
+First, we recommend that stock assessment scientists consider the use of bootstrap methods like this one [which was developed from @Stewart2017] to set and and length composition ISS.
 With modern computing power, for a single species using the package we built (<https://github.com/BenWilliams-NOAA/surveyISS>) it takes on the matter of a couple of hours to obtain both age and length composition bootstrap ISS for a historical survey time series (longer than 40 years in some cases); for a single year it takes a matter of minutes.
-Third, for all estimates of age composition ISS we recommend implementing ageing error and growth variability to more explicitly and thoroughly take these sources of uncertainty into account in stock assessment models.
+Second, for all estimates of age composition ISS we recommend implementing ageing error and growth variability to more explicitly and thoroughly take these sources of uncertainty into account in stock assessment models.
 We note that while we used fishery-independent data here as an example, that these sources of uncertainty would also be inherent to fishery-dependent data.
 
 # Acknowledgments
