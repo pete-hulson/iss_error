@@ -58,7 +58,7 @@ The two primary sources for age and length composition data used in SCAA models 
 Fishery-independent sources typically include randomized and standardized collection of samples from hauls in a non-targeted framework.
 Fishery-dependent sources are based upon collection of age and length samples, randomized at some level, but obtained from hauls targeting a specific species or fishery. 
 
-Regardless of the source of composition data, it is commonly accepted that overdispersion of the data is inherent due to intra-haul correlation [e.g., @Pennington2000], along with other multiple sources of error [@Pennington2002; @Hulson2011; @Stewart2014]. 
+Regardless of the source of composition data, it is commonly accepted that overdispersion of the data is inherent due to intra-haul correlation [e.g., @Pennington1994], along with other multiple sources of error [@Pennington2002; @Hulson2011; @Stewart2014]. 
 The concept of realized sample size [introduced by @Mcallister1997, but using the terminology presented in @Stewart2014], a reduced sample size from the actual number of fish measured or aged, is implemented to account for increased uncertainty due to these measurement and observation errors. 
 The realized sample size can be used as the 'input sample size' to weight the composition data to describe the relative information content of the data products being integrated in the stock assessment (e.g., catch, survey biomass, size-at-age, age and/or length composition). 
 Due to the strong influence that compositional data can have in SCAA models, the weight assigned to these data products are important for providing accurate advice for management [e.g., @Hulson2012; @Xu2020].
