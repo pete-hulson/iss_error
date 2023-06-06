@@ -1,5 +1,5 @@
 ---
-title: "Inclusion of ageing error and growth variability in the estimation of age composition input sample size"
+title: "Inclusion of ageing error and growth variability in the bootstrap estimation of age composition input sample size for fisheries stock assessment models"
 author:
   - name: Peter-John F. Hulson
     institute: afscjnu
@@ -41,52 +41,65 @@ source(here::here('R', "render_toc.R"))
 
 # Abstract
 
-Input sample size (ISS) is a quantity that is used to weight composition data in stock assessment models.
+Statistical catch-at-age assessment models used for fisheries management integrate various sources of information that are statistically weighted in a joint likelihood framework; the relative statistical weighting between these sources of information is an important, yet often a subjective aspect of stock assessment.
+Input sample size (ISS) is a quantity that is used to statistically weight composition data in these types of models.
 Both design-based bootstrap and model-based estimators have been proposed, however, these previous methods to determine ISS do not explicitly include sources of uncertainty from ageing error and growth variability that are inherent to expanded age composition data.
 In this study, we evaluate the impact of including ageing error and growth variability within bootstrap methods that estimate age composition ISS.
 We find that for all the stocks evaluated the ISS determined from bootstrap methods decreased as these addition sources of uncertainty were included.
 The decrease in ISS was species type specific, but generally decreased up to 40% when ageing error was introduced, up to 50% when growth variability was included, and up to 60% when both sources of uncertainty were included.
-These results indicate that there is more uncertainty within age composition data than would be accounted for with ISS estimates that do not include these sources of uncertainty.
-The method and results provided here allow for assessment scientist to weight age composition with ISS that takes into account ageing error and growth variability that are implicit to any expanded age composition from either fishery-independent or fishery-dependent sources; this has not previously been investigated.
+These results indicate that there is more variability within age composition data than would be accounted for with ISS estimates that do not include these sources of uncertainty.
+The method and results provided here allow for assessment scientists to statistically weight age composition with ISS that takes into account ageing error and growth variability that are implicit to any expanded age composition from either fishery-independent or fishery-dependent sources.
+This has not previously been investigated and including these sources of uncertainty improves bootstrap estimates of ISS to capture all the sources of variability in age composition and will subsequently improve stock assessment model quality.
+
+Key Words: stock assessment, aging error, growth variability, maximum likelihood, uncertainty, input sample size
 
 \newpage
 
 # Introduction
 
-Compositional information on age and length are critical data products used in statistical catch-at-age assessment (SCAA) models as they facilitate the tracking of year classes and size-structure over time to facilitate our understanding of a fish stock's population dynamics [@QuinnDeriso1999]. 
+Compositional information on age and length are critical data products used in statistical catch-at-age assessment (SCAA) models as they facilitate the tracking of year classes and size-structure over time to facilitate our understanding of a fish stock's population dynamics [@QuinnDeriso1999], including the size and age based mortality processes through the selectivity of the fisheries. 
 The two primary sources for age and length composition data used in SCAA models are fishery-independent and fishery-dependent. 
-Fishery-independent sources typically include randomized and standardized collection of samples from hauls in a non-targeted framework.
-Fishery-dependent sources are based upon collection of age and length samples, randomized at some level, but obtained from hauls targeting a specific species or fishery. 
+Fishery-independent sources typically include randomized and standardized collection of samples from hauls placed across space in a non-targeted framework.
+Fishery-dependent sources, on the other hand, are based upon collection of age and length samples, randomized at some level, but obtained from hauls within a trip that is targeting a specific species. 
+A common challenge in using compositional information in SCAA models to estimate population processes is the statistical weighting in the joint likelihood, as the statistical weighting effects the performance of the model.
+Due to the strong influence that compositional data can have in SCAA models, the statistical weight assigned to these data products are important for providing accurate advice for management [e.g., @Hulson2012; @Xu2020].
 
-Regardless of the source of composition data, it is commonly accepted that overdispersion of the data is inherent due to intra-haul correlation [e.g., @Pennington1994], along with other multiple sources of error [@Pennington2002; @Hulson2011; @Stewart2014]. 
-The concept of realized sample size [introduced by @Mcallister1997, but using the terminology presented in @Stewart2014], a reduced sample size from the actual number of fish measured or aged, is implemented to account for increased uncertainty due to these measurement and observation errors. 
-The realized sample size can be used as the 'input sample size' to weight the composition data to describe the relative information content of the data products being integrated in the stock assessment (e.g., catch, survey biomass, size-at-age, age and/or length composition). 
-Due to the strong influence that compositional data can have in SCAA models, the weight assigned to these data products are important for providing accurate advice for management [e.g., @Hulson2012; @Xu2020].
+Regardless of the source of composition data (whether fishery-independent for fishery-dependent), it is commonly accepted that overdispersion of the data is inherent due to intra-haul correlation [e.g., @Pennington1994; @Pennington2002]. 
+The concept of effective sample size [ESS; introduced by @Mcallister1997], a reduced sample size from the actual number of fish measured or aged to account for this overdispersion, can be implemented within the likelihood function to statistically weight the age or length composition data.
+The statistical weight assigned to annual composition data can follow a myriad of methods (e.g., fixed values as in @Monnahan2021, number of samples or tows sampled upon as in @Hulson2021 or @Spencer2022, bootstrapping compositions as in @Stewart2014).
+The primary consideration when assigning a statistical weight to composition data is to account for the potential variability and correlation in the sampling process that result in overdispersion. 
 
-The input sample size assigned to annual composition data can follow a myriad of methods (e.g., fixed values as in @Monnahan2021, number of samples or tows sampled upon as in @Hulson2021 or @Spencer2022, bootstrapping compositions as in @Stewart2014).
-Data-weighting methods, to ensure congruence between the variance of the data and the variance implied by the model [@Francis2017], are used to check the fit of compositional data. 
-The primary consideration when assigning a weight to composition data is to account for the potential variability and correlation in the sampling process. 
-The method developed by @Stewart2014 allows for resampling techniques to be employed at each level of the sampling design, and provides an objective avenue to determine input sample size that is based on the observation variability contained within the sampling process. 
+Throughout the development and implementation of the ESS concept in SCAA models a variety of terms have been used, often having multiple meanings for the same term.
+Often ESS is a term that has been used to denote the sample size used in statistical weighting of age or length composition data [e.g., @Hulson2012; @Punt2021], it has also be used to denote the performance of a SCAA estimates of composition data compared to the observed data [e.g., @Thorson2019].
+Input sample size (ISS) has also been used as a term to denote the sample size used in statistical weighting of age or length composition data [e.g., @Thorson2019; @Thorson2023].
+In addition, relative sample size is a term introduced when using bootstrap methodologies [@Stewart2014].
+In order to provide consistency in the literature we propose the following usage of terms as it relates to this issue:
+* Nominal sample size: the actual sample size obtained for age or length composition data from fishery-independent or fishery-dependent sources.
+* Input sample size: the reduced sample size that accounts for overdispersion of age or length composition data used to statistically weight the composition data in SCAA models.
+* Effective sample size: the statistic used to measure the difference in fit between SCAA model estimates of age or length composition data and the observed composition data.
+* Relative sample size: the sample size that measures the difference between bootstrap estimates of age or length composition and the observed composition for a given bootstrap iteration.
+Much of this terminology follows from @Thorson2023 and we reiterate and expand upon it here in an attempt to convince researchers to adhere to a uniform set of terms across the fisheries literature when studying age and length composition data used in SCAA models.
 
-In addition to the traditional sources of intra-haul, measurement and observation uncertainty in age composition data, for every fish species sampled for which age is capable of being determined from otoliths there is resulting variability in the ageing of the otolith, often called 'ageing error' [e.g., @Punt2008]. 
-There are a number of factors that can influence the magnitude of ageing error [@Nesslage2022], but inherent to obtaining ages from otoliths is variability in the age readings across the laboratory age readers. 
+When age is capable of being determined from otoliths, there is further variability in age composition data duet o the ageing of the otolith, often called 'ageing error' [e.g., @Punt2008]. 
+There are a number of factors that can influence the magnitude of ageing error [for example, the number of age classes or the sample size; @Nesslage2022], but inherent to obtaining ages from otoliths is variability in the age readings across the laboratory age readers. 
 To account for this source of variability, ageing laboratories regularly evaluate precision through obtaining multiple readings of the same otolith across different age readers [@Morison2005]. 
-Several methods have been developed to account for ageing error in SCAA models when fitting age composition through the use of an ageing error matrix [@Candy2012; @Punt2008]. 
-The essence of this approach is that the numbers-at-age estimated by the assessment model are 'corrected' through multiplication with an ageing error matrix, which assigns estimated numbers-at-age to adjacent age-classes depending on the magnitude of the ageing error within the specific age-class. 
+Several methods have been developed to account for ageing error in SCAA models when fitting age composition by integrating an ageing error matrix as an additional input data source for the model [@Candy2012; @Punt2008]. 
+The ageing error matrix is used to 'correct' the numbers-at-age estimated by the assessment model by assigning a certain proportion of fish in a given age class to adjacent age-classes based on the magnitude of the ageing error within the specific age-class. 
 Since the development and implementation of ageing error matrices a number of studies have been devoted to quantifying the effects of ageing error on assessment model estimates [e.g., @Henriquez2016, @Liao2013]. 
-Within each of these studies, and in each application of an ageing error matrix within a stock assessment model, the age composition data fit will be weighted by an input sample size. 
-As described previously, the input sample size selected would reflect the variability in the sampling process, which should also include the variability in the age readings themselves. 
+Within each of these studies, and in each application of an ageing error matrix within a SCAA model, the age composition data will be statistically weighted by an ISS. 
+As described previously, the ISS selected to statistically weight the age composition data should reflect the variability in the sampling process, thus, it should also include the variability in the age readings themselves. 
 
-In the process of compositional expansion, it is often the case that an age-length key (ALK) is employed to expand population numbers-at-length to population numbers-at-age [@QuinnDeriso1999; @Ailloud2019]. 
-It is through the ALK, and the subsequent age expansion, that observations of age composition are derived from fishery-independent and fishery-dependent sources. 
-Conditional age-at-length (CAAL), in which paired age-length data are used as an indication of the age distribution for a specific length, is used to inform length-at-age and it's related uncertainty [@Taylor2013]. 
-CAAL data can be used directly within SCAA models to inform estimates of growth as well as composition data [@Lee2019] and has been implemented in a number of operational stock assessments [e.g., @Mcgilliard2019; @Hulson2022]. 
-An intrinsic component to both the ALK and CAAL is the variability in length for a given age.
-Further, when using CAAL data as an additional likelihood component to a SCAA model one must determine the input sample size to be used to weight this information.
+In the process of obtaining an observed age composition, it is the case that an age-length key (ALK) is employed to expand the estimated population numbers-at-length to population numbers-at-age [@QuinnDeriso1999; @Ailloud2019].
+For either fishery-dependent or fishery-independent sources of age composition, if an expansion process is used to obtain an observed age composition it is generally the case that length frequency is expanded to some geographic area by weighting haul-level length frequency by haul-level catch-per-unit-effort (in numbers), this provides an estimated population numbers-at-length.
+Then, an ALK is constructed with age-length paired data and multiplied by the estimated population numbers-at-length to obtain estimated population numbers-at-age, often referred to as expanded age composition data [@Siskey2022]. 
+An intrinsic component to the ALK is the variability in length for a given age.
+This variability in growth, or the range in lengths that are observed for a given age, is directly linked to the variability in the expanded age composition, and thus, should be reflected in the ISS selected to statistically weight the age composition data within a SCAA model.
 
-Despite the acceptance of requiring an input sample size to weight age composition data in SCAA models that reflects the added uncertainty caused by overdispersion common to age sampling, and the recognition of the inherent variability in the ageing process when reading otoliths and in the growth process upon which age-length keys are based, these sources of uncertainty have not been previously integrated in an objective estimation method for input sample size. 
-In this study, we extend the methods of @Stewart2014 to estimate age composition input sample size that includes both ageing error and growth variability in the estimation process. 
+To date, no method has been developed to integrate the variability in the ageing process when reading otoliths and in the growth process upon which age-length keys are based within the estimation of ISS used to statistically weight age composition data in SCAA models.
+The bootstrap method developed by @Stewart2014 allows for resampling techniques to be employed at each level of the sampling design, and provides an objective avenue to estimate ISS that is based on the observation variability contained within the sampling process.
+In this study, we extend the methods of @Stewart2014 to estimate age composition ISS that includes both ageing error and growth variability in the estimation process. 
 We show, in a step-wise process, the added variability in age composition sample size from including ageing error and growth variability across a number of species that reflect differing life histories and levels of ageing difficulty. 
+*Through a case study involving several North Pacific SCAA models we also show the potential consequences of not including these sources of variability in the application of ISS to weight age composition data.*
 
 # Methods
 
@@ -199,6 +212,7 @@ On average, the relative ISS when adding both ageing error and growth variabilit
 The same trend resulted when evaluating the range in the relative ISS when both ageing error and growth variability were added.
 
 # Discussion
+*add a consequences of data weighting para somewhere*
 
 In this study we find that accounting for ageing error and growth variability using bootstrap procedures decreased age composition ISS for all stocks examined.
 The impact of the sources of uncertainty on resulting ISS was species type specific, with ageing error being more influential for rockfish than growth variability, and growth variability more influential than ageing error for flatfish and gadids.

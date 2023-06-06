@@ -1,3 +1,6 @@
+devtools::install_github("BenWilliams-NOAA/afscassess", force = TRUE)
+
+
 # load ----
 library(tidyverse)
 library(tidytable)
