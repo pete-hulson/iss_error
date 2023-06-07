@@ -105,37 +105,91 @@ We show, in a step-wise process, the added variability in age composition sample
 
 ## Data
 We used historical data collected from bottom trawl surveys conducted by the Alaska Fisheries Science Center (AFSC) in the Eastern Bering Sea [EBS: @Lauth2019], Aleutian Islands [AI: @vonSzalay2017], and Gulf of Alaska [GOA: @vonSzalay2018]. 
-Within the AFSC bottom trawl surveys both length frequency data and age specimen data are collected in addition to other survey data (e.g., catch, effort, location). 
+Within the AFSC bottom trawl surveys both length frequency data and age specimen data are collected, in addition to other survey data (e.g., catch, effort, location). 
 Generally, a subsample of fish from each haul were processed at sea to collect their sex, length, and weight. 
-A subsample of these fish have their sagittal otoliths collected, these otoliths were sent (with haul and specimen data) to the AFSC Age and Growth laboratory for age determination. 
+A subsample of these fish have their sagittal otoliths collected; these otoliths were sent (with haul and specimen data) to the AFSC Age and Growth laboratory for age determination. 
 Periodically, a subset of aged otoliths are selected for reader-tester agreement tests.
 These tests are used to evaluate the reproducability of an age reading when two different readers age the same fish without knowledge of the other reader's age determination of the otolith [@Kimura1991]. 
 The average annual bottom trawl survey age sample sizes by region, and the total number of otoliths used for reader-tester agreement tests are shown in Table \@ref(tab:species-samples)) for the species evaluated.
 The species or stocks selected for this analysis all have greater than 5,000 reader-tester paired otolith readings.
 These stocks are all assessed using integrated SCAA models that require input sample sizes for the age composition data. 
-Details of how the length frequency and age collections are expanded to population abundance-at-length and -age then subsequently used as compositional data in stock assessment models at AFSC are provided in @Hulson2023b. 
+
+## Length and age composition expansion
+
+Details of how the length frequency and age collections are expanded to population abundance-at-length and -age then subsequently used as compositional data in stock assessment models at AFSC are provided in @Hulson2023b.
+Here we generalize these methods to provide the reader with a broad understanding of how length and age composition are expanded in the AFSC bottom trawl surveys.
+
+Length frequency samples collected by the AFSC bottom trawl surveys are expanded by catch and stratum area to obtain estimates of population abundance-at-length.
+This is often referred to as the 'first stage expansion' and is a common method to obtain population abundance estimates at length from area-swept survey data [e.g., ; @Ailloud2019].
+To expand the species-specific length frequency samples to population-at-length we first compute the overall population numbers within a stratum by multiplying the average catch per unit effort within the strata (i.e., the number of fish per square kilometer averaged across the hauls performed within the strata) by the area of the strata (in square kilometers).
+The overall population numbers year-*y* within stratum-*s* ($\hat{N}_{s,y}$) is computed with
+
+\begin{equation}
+ \hat{N}_{s,y}=\overline{CPUE}_{s,y}\cdot A_{s}
+  (\#eq:eqn1)
+\end{equation}
+where $A_{s}$ is the area of stratum-*s* (in km^2^), and $\overline{CPUE}_{s,y}$ is the species-specific average catch per unit effort of numbers captured across the hauls within a strata in year-*y*
+We then compute the relative catch per unit effort for each haul performed within the strata and the sex-specific relative length composition for each haul.
+The relative catch per unit effort for each haul ($\hat{p}_{C,h,s,y}$) is computed by
+
+\begin{equation}
+\hat{p}_{C,h,s,y}=\frac{CPUE_{h,s,y}}{\sum_{h=1}^{H_{s,y}}CPUE_{h,s,y}}
+  (\#eq:eqn2)
+\end{equation}
+where $CPUE_{h,s,y}$ is the catch per unit effort of numbers caught within a haul-*h* for stratum-*s* in year-*y*.
+The sex-specific relative length composition for each haul ($\hat{p}_{x,l,h,s,y}$) is computed with
+
+\begin{equation}
+ \hat{p}_{x,l,h,s,y}=\frac{\sum_{h=1}^{H_{s,y}}[N_{x,l,h,s,y}/N_{h,s,y}]}{\sum_{x=1}^{3}\sum_{l=1}^{L}\sum_{h=1}^{H_{s,y}}[N_{x,l,h,s,y}/N_{h,s,y}]}
+  (\#eq:eqn3)
+\end{equation}
+where $N_{x,l,h,s,y}$ is the length frequency sampled, in numbers, by sex-*x* and length-*l* (in cm) within a haul-*h* for stratum-*s* in year-*y*.
+
+Finally, the expanded population abundance-at-length is obtained by multiplying the overall population numbers within the strata (equation \@ref(eq:eqn1)), the relative catch per unit effort of each haul (equation \@ref(eq:eqn2)), and the sex-specific relative length composition (equation \@ref(eq:eqn3)) with
+
+\begin{equation}
+ \hat{N}_{x,l,s,y}=\sum_{h=1}^{H_{s,y}}[\hat{N}_{s,y}\cdot\hat{p}_{C,h,s,y}\cdot\hat{p}_{x,l,h,s,y}]
+  (\#eq:eqn4)
+\end{equation}
+and to obtain the sex-specific estimates of population abundance-at-length in a management area one would simply sum $\hat{N}_{x,l,s,y}$ across strata.
+
+In the second stage expansion the sex-specific estimates of population abundance-at-length are used to estimate sex-specific population abundance-at-age.
+The annual specimen data that are collected during the survey, which include observations of age-at-length, are first populated into sex-specific numbers at age and length ($N_{x,a,l,y}$).
+Next, the sex-specific numbers-at-age and length are converted to sex-specific proportions of age-at-length (i.e., age-length key) with
+
+\begin{equation}
+ \hat{p}_{x,a,l,y}=\frac{N_{x,a,l,y}}{\sum_{a=1}^{A}N_{x,a,l,y}}
+  (\#eq:eqn5)
+\end{equation}
+The proportions of age-at-length are then expanded to population abundance-at-age with
+
+\begin{equation}
+ \hat{N}_{sx,a,y}=\sum_{l=1}^{L}\hat{p}_{x,a,l,y}\cdot \hat{N}_{x,l,y}
+  (\#eq:eqn6)
+\end{equation}
+where $\hat{N}_{x,l,y}$ is the population abundance-at-length from equation \@ref(eq:eqn4) summed across strata.
 
 ## Simulation-Bootstrap framework
-To evaluate the effect of the inclusion of ageing error and growth variability on uncertainty in age compostion datasets we modified a bootstrap-simulation framework [@Hulson2023b] to include these additional sources of error.
+To evaluate the effect of the inclusion of ageing error and growth variability on uncertainty in age composition datasets we modified a bootstrap-simulation framework [@Hulson2023b] to include these additional sources of error.
 In simple terms, the simulation framework is a two-stage bootstrap that first resamples hauls, then resamples lengths and ages collected within the resampled hauls following from the methods in @Stewart2014. 
 The simulation framework was modified to account for ageing error by resampling from tester ages associated with a given reader age. 
-Growth variability was incorporated, for each species, by resampling fom all lengths associated with a given age and sex.
+Growth variability was incorporated by resampling from all lengths associated with a given age and sex.
 
-The order of operations (Figure \@ref(fig:bs-flows) has the following schedule:
+The order of operations (Figure \@ref(fig:bs-flows)) has the following schedule:
 
-1.  Resample hauls from the set of hauls with associated catch per unit effort (in numbers)
-2.  Within the resampled hauls from step 1, resample the observed lengths
-3.  With the resampled length frequency data from step 2, calculate population abundance-at-length
-4.  Within the resampled hauls from step 1, resample the observed ages from the specimen data
-5.  For the resampled ages in step 4, resample a length from the set of lengths observed for the given age
-6.  For the resampled ages in step 4, resample an age from the set of tester ages for the given age
-7.  With the resampled age data in steps 4-6 and the population abundance-at-length in step 3, calculate the population abundance-at-age
+1.  Resample hauls from the set of hauls with associated catch per unit effort (in numbers).
+2.  Within the resampled hauls from step 1, resample the observed lengths.
+3.  With the resampled length frequency data from step 2, calculate population abundance-at-length (equations \@ref(eq:eqn1) - \@ref(eq:eqn4)).
+4.  Within the resampled hauls from step 1, resample the observed ages from the specimen data.
+5.  For the resampled ages in step 4, resample a length from the set of lengths observed for the given age.
+6.  For the resampled ages in step 4, resample an age from the set of tester ages for the given age.
+7.  With the resampled age data in steps 4-6 and the population abundance-at-length in step 3, calculate the population abundance-at-age (equations \@ref(eq:eqn5) - \@ref(eq:eqn6)).
 
 Steps 5 and 6 were designed to explore inclusion of ageing error and growth variability.
-The bootstrap-simulation repeats steps 1-7 iteratively providing iterated population abundance-at-age for comparison to the historical (the full sample without any resampling of data) population abundance-at-age.
+The bootstrap-simulation repeats steps 1-7 providing iterated population abundance-at-age for comparison to the historical (the full sample without any resampling of data) population abundance-at-age.
 
-We applied the bootstrap-simulation in a step-wise manner to evaluate the consequences of adding each source of additional error to the age composition estimates across what we term 'uncertainty scenarios'.
-First, we ran the bootstrap-simulation with the historical data without adding any extra error, thus, omitting steps 5 and 6 above ('Base' scenario). 
+We applied the bootstrap-simulation in a step-wise manner to evaluate the consequences of adding each source of additional error to the age composition estimates across what we term 'uncertainty scenarios.'
+First, we ran the standard bootstrap-simulation omitting steps 5 and 6 above ('Base' scenario). 
 Next, we added ageing error ('AE' scenario) and growth variability ('GV' scenario) separately, thus, omitting either step 5 or 6 depending on the source of uncertainty desired.
 Finally, we added both ageing error and growth variability ('AE & GV' scenario) to the bootstrap-simulation framework.
 To increase reader-tester sample sizes for each species, we pooled reader-tester data across the three regions (we note that age readings for all three regions are produced in the same age reading laboratory at AFSC).
@@ -149,16 +203,16 @@ A useful statistic that can quantify the variability in age composition is relat
 This statistic evaluates the amount of uncertainty in an estimated composition compared to an observed composition and is given by:
 
 \begin{equation}
- R_i=\frac{\sum_{c=1}^{C}E_{c,i}(1-E_{c,i})}{\sum_{c=1}^{C}(E_{c,i}-O_c)^2}
- (\#eq:eqn1)
+ R_{i,y}\frac{\sum_{c=1}^{C}O_{c,y}(1-O_{c,y})}{\sum_{c=1}^{C}(E_{c,i,y}-O_{c,y})^2}
+ (\#eq:eqn7)
 \end{equation}
-where $E_{c,i}$ is the estimated proportion for category-*c* (which can be age or any other arbitrary category across which proportions are computed) and $O_c$ is the observed proportion.
-Here, the underlying age composition derived from the historical bottom trawl surveys with the full and unsampled data was treated as the observed proportions $O_c$ in equation \@ref(eq:eqn1).
-For each iteration-*i* of the bootstrap-simulation we computed an estimated proportion ($E_{c,i}$) that was then compared to the underlying historical age composition ($O_c$) to determine the relative sample size ($R_i$) of the resampled age composition.
+where $E_{c,i,y}$ is the estimated proportion for category-*c* (which can be age or any other arbitrary category across which proportions are computed) for iteration-*i* in year-*y* and $O_{c,y}$ is the observed proportion.
+Here, the underlying age composition derived from the historical bottom trawl surveys with the full and unsampled data was treated as the observed proportions $O_{c,y}$ in equation \@ref(eq:eqn7).
+For each iteration-*i* of the bootstrap-simulation we computed an estimated proportion ($E_{c,i,y}$) that was then compared to the observed age composition ($O_{c,y}$) to determine the relative sample size ($R_{i,y}$) of the resampled age composition.
 Thus, across each iteration of the bootstrap-simulation we computed a relative sample size that indicated the amount of uncertainty in the resampled age composition.
 
 To summarize relative sample size across iterations we used the harmonic mean.
-This has been shown to reduce bias in recovering the true sample size in simulations for a multinomial distribution and has also been recommended to determine the input sample size (ISS) that is used in stock assessment models to fit compositional data [@Stewart2014].
+This has been shown to reduce bias in recovering the true sample size in simulations for a multinomial distribution and has also been recommended to determine the ISS that is used in stock assessment models to fit compositional data [@Stewart2014].
 While we present the results of the annual ISS for each stock evaluated when incorporating ageing error, growth variability, or both, we also compute the proportion of 'base' ISS in order to present the relative decrease in ISS when incorporating these sources of additional uncertainty.
 The 'relative ISS' is computed by dividing the ISS as determined after incorporating ageing error, growth variability, or both, by the base ISS without these sources of uncertainty.
 
@@ -167,7 +221,7 @@ The 'relative ISS' is computed by dividing the ISS as determined after incorpora
 Trends across stocks were aggregated and evaluated using three species types: flatfish (arrowtooth flounder, flathead sole, northern rock sole, and yellowfin sole), gadids (walleye pollock and Pacific cod), and rockfish (Pacific ocean perch and northern rockfish).
 Two statistics were used to evaluate trends across the cases that added ageing error and growth variability.
 The first statistic we used to evaluate the influence of adding ageing error was the average coefficient of variation (CV) in age agreement.
-We computed this by computing the CV in the tester ages for a given reader age, then averaged these CVs across the reader ages.
+We computed the CV in the tester ages for a given reader age, then averaged these CVs across the reader ages.
 The second statistic we used to evaluate the influence of adding growth variability was the average CV in age-length data.
 We computed the average age-length CV by computing the CV in length for a given age, then averaging the CVs in length-at-age across age.
 
@@ -286,7 +340,7 @@ We thank *reviewer1* and *reviewer2* for their helpful reviews of this manuscrip
 
 # Tables
 
-```{r species-sample}
+```{r species-samples}
 knitr::kable(vroom::vroom(here::here('tables', 'species_sample.csv')), 
              caption = "Average age samples from the AFSC bottom trawl surveys by region (rounded to the nearest 10), and total reader-tester age pairs (rounded to the nearest 100) for the species evaluated in the bootstrap-simulation.", 
              align = c('llcccc'), format.args = list(big.mark = ",", scientific = FALSE))
