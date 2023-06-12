@@ -369,14 +369,18 @@ plot_dat_ape %>%
   ylab("AE & GV") +
   ylim(0, 1.3) -> p3
 
+ggpubr::ggarrange(ggpubr::ggarrange(p1, p2, ncol = 2),
+                  p3,
+                  nrow = 2) -> fig
+
 png(filename=here::here("figs", "alt_ae-gv-stats.png"), 
     width = 6.5, height = 6.5,
     units = "in", res=200)
 
-ggpubr::ggarrange(ggpubr::ggarrange(p1, p2, ncol = 2),
-                  p3,
-                  nrow = 2)
-
+ggpubr::annotate_figure(fig, 
+                        left = grid::textGrob("Relative age composition input sample size\n", 
+                                              rot = 90, vjust = 1, 
+                                              gp = grid::gpar(cex = 1, fontface="plain", fontfamily="Times New Roman")))
 
 dev.off()
 
