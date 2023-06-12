@@ -11,8 +11,10 @@ library(scico)
 library(extrafont)
 library(cowplot)
 library(egg)
+library(ggplot2)
 library(gg.layers)
 # remotes::install_version("Rttf2pt1", version = "1.3.8")
+# remotes::install_github("rpkgs/gg.layers")
 # extrafont::font_import()
 loadfonts(device="win")   
 
@@ -131,6 +133,10 @@ names(surv_labs) <- c("ai", "bs", "goa")
 
 # plot age iss with added error ----
 
+png(filename=here::here("figs", "alt_iss.png"), 
+    width = 6.5, height = 8.0,
+    units = "in", res=200)
+
 plot_dat %>% 
   select(year, species_code, comp_type, ae, ae_al, al, base, region) %>% 
   tidytable::left_join(spec) %>%
@@ -142,32 +148,30 @@ plot_dat %>%
                     surv_labs = case_when(region == 'goa' ~ "Gulf of Alaska",
                                           region == 'ai' ~ "Aleutian Islands",
                                           region == 'bs' ~ "Eastern Bering Sea Shelf"),
-                    err_src = factor(err_src)) -> plot_dat_iss
-
-plot_dat_iss %>% 
-  ggplot(., aes(x = factor(err_src, level = c('Base', 'AE', 'GV', 'AE & GV')), 
-                y = value, 
-                fill = comp_type)) +
-  geom_boxplot2(width.errorbar = 0) +
-  facet_grid(surv_labs ~ species_name, 
-             # scales = "free",
+                    err_src = factor(err_src, level = c('Base', 'AE', 'GV', 'AE & GV'))) %>% 
+  # filter(species_name %in% c("Arrowtooth flounder", "Pacific ocean perch", "Pacific cod", "Walleye pollock")) %>% 
+  ggplot(aes(err_src, value, fill = comp_type)) +
+  geom_boxplot2(width.errorbar = 0, alpha= 0.5) +
+  facet_grid(species_name ~ surv_labs, 
+             scales = "free_y",
              labeller = label_wrap_gen(10)) +
   theme(legend.position = "bottom",
-        axis.text.x = element_text(angle = -45, hjust = 0),
-        text = element_text(size = 10)) +
-  xlab("Uncertainty scenario") +
-  ylab("Age composition input sample size") +
+        strip.text.y.right = element_text(angle = 0)) +
+  xlab("\nUncertainty scenario") +
+  ylab("Age composition ISS\n") +
   scale_fill_scico_d(palette = 'roma',
-                     name = "Composition type") -> iss_plot
+                     name = "Composition type")  +
+  scale_y_continuous(breaks = c(0, 250, 500)) +
+  expand_limits(y=c(0, 250))
+# scale_y_continuous(breaks  = c(0, 200, 00))
 
-ggsave(here::here("figs", "iss_plot.png"),
-       iss_plot,
-       device = "png",
-       width = 6,
-       height = 6)
-
+dev.off() 
 
 # plot prop of base age iss with added error ----
+
+png(filename=here::here("figs", "alt_prop-iss.png"), 
+    width = 6.5, height = 5,
+    units = "in", res=200)
 
 plot_dat %>% 
   select(year, species_code, comp_type, ae, ae_al, al, base, region) %>% 
@@ -182,27 +186,27 @@ plot_dat %>%
                     surv_labs = case_when(region == 'goa' ~ "Gulf of Alaska",
                                           region == 'ai' ~ "Aleutian Islands",
                                           region == 'bs' ~ "Eastern Bering Sea Shelf"),
-                    err_src = factor(err_src)) -> plot_dat_prop_iss
-
-plot_dat_prop_iss %>% 
-  tidytable::drop_na() %>% 
+                    err_src = factor(err_src, level = c('AE', 'GV', 'AE & GV'))) %>% 
+  complete(err_src, species_type, surv_labs) %>% 
+  replace_na(list(value = 0)) %>% 
   tidytable::filter(species_type != "other") %>% 
-  tidytable::summarise(mean_p = mean(value), .by = c(species_name, species_type, comp_type, err_src, surv_labs)) %>%
-  ggplot(.,aes(x = species_type, y = mean_p, fill = as.factor(species_type))) +
-  geom_boxplot2(width.errorbar = 0) +
-  facet_grid(surv_labs ~ factor(err_src, level = c('AE', 'GV', 'AE & GV'))) +
-  ylab("Proportion of base age composition input sample size") +
-  xlab("Species type") +
+  tidytable::summarise(mean_p = mean(value),
+                       .by = c(species_name, species_type, comp_type, err_src, surv_labs)) %>%
+  ggplot(aes(err_src, mean_p, fill = species_type)) +
+  geom_boxplot2(width.errorbar = 0, 
+                width = 0.9,
+                position = position_dodge(preserve = "single"),
+                alpha = 0.5) +
+  facet_wrap(~surv_labs) +
+  ylab("Proportion of Base scenario ISS\n") +
+  xlab("\nUncertainty scenario") +
   scale_fill_scico_d(palette = 'roma',
-                     name = "Species type") + 
-  theme(text = element_text(size = 14),
-        legend.position = "none") -> prop_iss_plot
+                     name = "Species type") +
+  theme(legend.position = c(0.8, 0.2)) +
+  coord_cartesian(ylim = c(0.4, 1))
 
-ggsave(here::here("figs", "prop_iss_plot.png"),
-       prop_iss_plot,
-       device = "png",
-       width = 6,
-       height = 6)
+dev.off()
+
 
 # plot iss and nss per haul with added error ----
 
@@ -221,78 +225,70 @@ plot_dat %>%
                                         name == 'base_hl' ~ 'Base'),
                     surv_labs = case_when(region == 'goa' ~ "Gulf of Alaska",
                                           region == 'ai' ~ "Aleutian Islands",
-                                          region == 'bs' ~ "Eastern Bering Sea Shelf"),
-                    err_src = factor(err_src),
+                                          region == 'bs' ~ "eastern Bering Sea shelf"),
+                    err_src = factor(err_src, level = c('Base', 'AE', 'GV', 'AE & GV')),
                     surv_labs = factor(surv_labs)) %>% 
   tidytable::filter(species_type != 'other') -> hls_dat
 
 hls_dat %>% 
-  ggplot(.,aes(x = n_hl, y = value, color = as.factor(species_type))) +
-  geom_point() +
+  ggplot(aes(n_hl, value, color = species_type)) +
+  geom_point(alpha = 0.3) +
+  geom_abline(slope = 1, intercept = 0, lty=3) +
   stat_ellipse(aes(fill = species_type, 
                    color = species_type), 
-               alpha = 0.25, 
+               alpha = 0.3, 
                level = 0.95,
                type = "norm",
                geom = "polygon") +
-  scale_shape_manual(values=seq(0,14)) +
-  facet_grid( ~ factor(err_src, level = c('Base', 'AE', 'GV', 'AE & GV')),
+  facet_grid( ~ err_src,
               labeller = labeller(region = surv_labs)) +
-  geom_abline(slope = 1, intercept = 0, colour = "black", xintercept = 1) +
-  geom_abline(slope = 0, intercept = 1, colour = "black") +
-  xlab("Number of age samples per sampled haul") +
-  ylab("Age composition input sample size per sampled haul") +
+  xlab("\nNumber of age samples per sampled haul") +
+  ylab("Age composition input sample size per sampled haul\n") +
   labs(pch = "Stock") +
   scale_color_scico_d(palette = 'roma',
                       name = "Species type") + 
   scale_fill_scico_d(palette = 'roma',
-                     name = "Species type") + 
-  theme(text = element_text(size = 14),
-        strip.text = element_blank(),
-        legend.position = "none",
-        axis.title.y = element_blank()) -> iss_nss_hls
-
+                     name = "Species type") +
+  theme(legend.position = "none") -> p1
 
 hls_dat %>% 
   tidytable::drop_na() %>% 
-  tidytable::summarise(mean_hl = mean(value),
-                       lci_hl = quantile(value, probs = 0.025),
-                       uci_hl = quantile(value, probs = 0.975), .by = c(species_type, err_src)) %>% 
-  ggplot(.,aes(x = species_type, y = mean_hl, fill = as.factor(species_type))) +
-  geom_bar(stat = "identity") +
-  facet_grid( ~ factor(err_src, level = c('Base', 'AE', 'GV', 'AE & GV'))) +
-  xlab("Number of age samples per sampled haul") +
+  # tidytable::summarise(mean_hl = mean(value),
+  #                      lci_hl = quantile(value, probs = 0.025),
+  #                      uci_hl = quantile(value, probs = 0.975), 
+  #                      .by = c(species_type, err_src)) %>% 
+  ggplot(aes(species_type, value, fill = species_type)) +
+  # geom_bar(stat = "identity") +
+  geom_boxplot2(width.errorbar = 0, alpha= 0.5) +
+  facet_grid( ~ err_src) +
+  xlab("\nSpecies type") +
   ylab("Age composition input sample size per sampled haul") +
-  labs(pch = "Stock") +
-  scale_color_scico_d(palette = 'roma',
-                      name = "Species type") + 
-  scale_fill_scico_d(palette = 'roma',
-                     name = "Species type") + 
-  theme(text = element_text(size = 14),
-        axis.title.x = element_blank(),
-        strip.text.x = element_blank(),
-        axis.title.y = element_blank(),
-        legend.position = "bottom") +
-  geom_errorbar(aes(x = species_type, ymin = lci_hl, ymax = uci_hl), width = 0) -> iss_hls
+  scale_color_scico_d(palette = 'roma') + 
+  scale_fill_scico_d(palette = 'roma', alpha = 0.5) + 
+  theme(legend.position = "none") -> p2
+# geom_errorbar(aes(ymin = lci_hl, ymax = uci_hl), width = 0) -> p2
 
 
-hls_iss_nss <- ggarrange(iss_nss_hls,
-                         iss_hls,
-                         ncol= 1,
-                         left = "Age composition input sample size per sampled haul")
 
-ggsave(here::here("figs", "hls_iss_nss.png"),
-       hls_iss_nss,
-       device = "png",
-       width = 7,
-       height = 6)
+ggpubr::ggarrange(p1 + ggpubr::rremove("ylab"),
+                  p2 + ggpubr::rremove("ylab"),
+                  ncol= 1) -> fig
+
+png(filename=here::here("figs", "alt_hls-iss-nss.png"), 
+    width = 6.5, height = 6.5,
+    units = "in", res=200)
+
+ggpubr::annotate_figure(fig, 
+                        left = grid::textGrob("Age composition input sample size per haul\n", 
+                                              rot = 90, vjust = 1, 
+                                              gp = grid::gpar(cex = 1, fontface="plain", fontfamily="Times New Roman")))
+
+dev.off()
 
 
 
 
 # plot relationship with ape and sd_l ----
-
-
 
 plot_dat %>% 
   tidytable::left_join(spec) %>%
@@ -349,91 +345,38 @@ plot_dat_ape %>%
   scale_fill_scico_d(palette = 'roma',
                      name = "Species type") + 
   theme(text = element_text(size = 10),
-        legend.position = "none") -> p2
-
+        legend.position = "none") +
+  scale_x_continuous(breaks = c(0, 0.05, 0.1, 0.15)) +
+  expand_limits(x=0) -> p2
 
 plot_dat_ape %>% 
   tidytable::filter(err_src == 'AE & GV', species_type != 'other') %>% 
   tidytable::summarise(mean_ae = mean(value, na.rm = TRUE),
                        lci_hl = quantile(value, probs = 0.025, na.rm = TRUE),
-                       uci_hl = quantile(value, probs = 0.975, na.rm = TRUE), .by = c(species_name, species_type)) %>% 
-  ggplot(.,aes(x = reorder(species_name, -mean_ae), y = mean_ae, fill = as.factor(species_type))) +
-  geom_bar(stat = "identity") +
-  ylab("AE & GV") +
+                       uci_hl = quantile(value, probs = 0.975, na.rm = TRUE), 
+                       .by = c(species_name, species_type)) %>% 
+  ggplot(aes(reorder(species_name, -mean_ae), mean_ae, fill = species_type)) +
+  geom_bar(stat = "identity", alpha = 0.5) +
+  geom_errorbar(aes(x = reorder(species_name, mean_ae), 
+                    ymin = lci_hl, ymax = uci_hl), 
+                width = 0) +
   scale_fill_scico_d(palette = 'roma',
                      name = "") + 
-  theme(text = element_text(size = 10),
-        axis.text.x = element_text(angle = -45, hjust = 0),
+  theme(axis.text.x = element_text(angle = -45, hjust = 0),
         axis.title.x = element_blank(),
-        legend.position = "bottom") +
-  geom_errorbar(aes(x = reorder(species_name, mean_ae), ymin = lci_hl, ymax = uci_hl), width = 0) +
+        legend.position = c(0.47, 0.9)) +
+  # guides(fill = guide_legend(nrow = 1)) +
+  ylab("AE & GV") +
   ylim(0, 1.3) -> p3
 
-p3 +
-  theme(legend.position = "none") -> p3a
+png(filename=here::here("figs", "alt_ae-gv-stats.png"), 
+    width = 6.5, height = 6.5,
+    units = "in", res=200)
 
-get_legend<-function(myggplot){
-  tmp <- ggplot_gtable(ggplot_build(myggplot))
-  leg <- which(sapply(tmp$grobs, function(x) x$name) == "guide-box")
-  legend <- tmp$grobs[[leg]]
-  return(legend)
-}
-
-legend <- get_legend(p3)
-
-p4 <- ggdraw() +
-  draw_plot(p1, x = 0, y = .5, width = .5, height = .5) +
-  draw_plot(p2, x = .5, y = .5, width = .5, height = .5) +
-  draw_plot(p3a, x = 0, y = 0, width = 1, height = 0.5) +
-  draw_plot(legend, x = 0, y = 0.44, width = 1, height = 0.05)
-
-ggsave(here::here("figs", "ae_gv_stats.png"),
-       p4,
-       device = "png",
-       width = 7,
-       height = 6)
+ggpubr::ggarrange(ggpubr::ggarrange(p1, p2, ncol = 2),
+                  p3,
+                  nrow = 2)
 
 
-# plot iss relationship with hauls ----
-
-plot_dat %>% 
-  select(year, species_code, comp_type, ae, ae_al, al, base, nhls, nss, region) %>% 
-  tidytable::left_join(spec) %>% 
-  tidytable::pivot_longer(cols = c(ae, al, ae_al, base)) %>% 
-  tidytable::mutate(err_src = case_when(name == 'ae' ~ 'AE',
-                                        name == 'al' ~ 'GV',
-                                        name == 'ae_al' ~ 'AE & GV',
-                                        name == 'base' ~ 'Base'),
-                    surv_labs = case_when(region == 'goa' ~ "Gulf of Alaska",
-                                          region == 'ai' ~ "Aleutian Islands",
-                                          region == 'bs' ~ "Eastern Bering Sea Shelf"),
-                    err_src = factor(err_src),
-                    surv_labs = factor(surv_labs)) %>% 
-  tidytable::filter(species_type != 'other') -> plot_dat_hls
-
-
-plot_dat_hls %>% 
-  tidytable::filter(species_type != 'other') %>% 
-  ggplot(.,aes(x = nhls, y = value, color = as.factor(species_type))) +
-  geom_point() +
-  xlab("Number of sampled hauls") +
-  ylab("Age composition input sample size") +
-  facet_wrap(~ factor(err_src, level = c('Base', 'AE', 'GV', 'AE & GV'))) +
-  geom_abline(slope = 1, intercept = 0, colour = "black", xintercept = 1) +
-  scale_color_scico_d(palette = 'roma',
-                      name = "Species type") + 
-  scale_fill_scico_d(palette = 'roma',
-                     name = "Species type") + 
-  theme(text = element_text(size = 14),
-        legend.position = "bottom") +
-  geom_smooth(method = "lm", 
-              se = T) +
-  ylim(0,300) +
-  xlim(0,300) -> iss_hls
-
-ggsave(here::here("figs", "iss_hls.png"),
-       iss_hls,
-       device = "png",
-       width = 7,
-       height = 6)
+dev.off()
 
