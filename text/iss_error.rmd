@@ -39,6 +39,15 @@ source(here::here('R', "render_toc.R"))
 
 \newpage
 
+# Highlights
+
+*   We develop a method to integrate ageing error and growth variability into a bootstrap framework that estimates age composition input sample size 
+*   Incorporating ageing error and growth variability reduces the age composition input sample size up to 60% 
+*   The magnitude of reduction in age composition input sample size was species type specific
+*   Incorporating ageing error and growth variability to estimate input sample size with a bootstrap procedure more fully accounts for the sources of uncertainty in the expansion process for age composition data
+
+\newpage
+
 # Abstract
 
 Statistical catch-at-age assessment models used for fisheries management integrate various sources of information that are statistically weighted in a joint likelihood framework; the relative statistical weighting between these sources of information is an important, yet often a subjective aspect of stock assessment.
@@ -55,7 +64,7 @@ Key Words: stock assessment, aging error, growth variability, maximum likelihood
 
 \newpage
 
-# Introduction
+# 1. Introduction
 
 Compositional information on age and length are critical data products used in statistical catch-at-age assessment (SCAA) models as they facilitate the tracking of year classes and size-structure over time to facilitate our understanding of a fish stock's population dynamics [@QuinnDeriso1999], including the size and age based mortality processes through the selectivity of the fisheries. 
 The two primary sources for age and length composition data used in SCAA models are fishery-independent and fishery-dependent. 
@@ -103,9 +112,9 @@ In this study, we extend the methods of @Stewart2014 to estimate age composition
 We show, in a step-wise process, the added variability in age composition sample size from including ageing error and growth variability across a number of species that reflect differing life histories and levels of ageing difficulty. 
 <!-- *Through a case study involving several North Pacific SCAA models we also show the potential consequences of not including these sources of variability in the application of ISS to weight age composition data.* -->
 
-# Methods
+# 2. Material and methods
 
-## Data
+## 2.1 Data
 
 We used historical data collected from bottom trawl surveys conducted by the Alaska Fisheries Science Center (AFSC) in the Eastern Bering Sea [EBS: @Lauth2019], Aleutian Islands [AI: @vonSzalay2017], and Gulf of Alaska [GOA: @vonSzalay2018]. 
 Within the AFSC bottom trawl surveys both length frequency data and age specimen data are collected, in addition to other survey data (e.g., catch, effort, location). 
@@ -117,7 +126,7 @@ The average annual bottom trawl survey age sample sizes by region, and the total
 The species or stocks selected for this analysis all have greater than 5,000 reader-tester paired otolith readings.
 These stocks are all assessed using integrated SCAA models that require input sample sizes for the age composition data. 
 
-## Length and age composition expansion
+## 2.2 Length and age composition expansion
 
 Details of how the length frequency and age collections are expanded to population abundance-at-length and -age then subsequently used as compositional data in stock assessment models at AFSC are provided in @Hulson2023b.
 Here we generalize these methods to provide the reader with a broad understanding of how length and age composition are expanded in the AFSC bottom trawl surveys.
@@ -172,7 +181,7 @@ The proportions of age-at-length are then expanded to population abundance-at-ag
 \end{equation}
 where $\hat{N}_{x,l,y}$ is the population abundance-at-length from equation \@ref(eq:eqn4) summed across strata.
 
-## Simulation-Bootstrap framework
+## 2.3 Simulation-Bootstrap framework
 
 To evaluate the effect of the inclusion of ageing error and growth variability on uncertainty in age composition datasets we modified a bootstrap-simulation framework [@Hulson2023b] to include these additional sources of error.
 In simple terms, the simulation framework is a two-stage bootstrap that first resamples hauls, then resamples lengths and ages collected within the resampled hauls following from the methods in @Stewart2014. 
@@ -201,7 +210,7 @@ Sex-specific age-length pairs were pooled across all survey years, by region, in
 The bootstrap-simulations were run for 500 iterations, a level at which the variability in population abundance-at-age results had stabilized.
 The bootstrap-simulation was developed in R [@Rcore] and is available via GitHub as an R package (<https://github.com/BenWilliams-NOAA/surveyISS>).
 
-## Computing input sample size
+## 2.4 Computing input sample size
 
 A useful statistic that can quantify the variability in age composition is relative sample size, introduced by @Mcallister1997.
 This statistic evaluates the amount of uncertainty in an estimated composition compared to an observed composition and is given by:
@@ -220,7 +229,7 @@ This has been shown to reduce bias in recovering the true sample size in simulat
 While we present the results of the annual ISS for each stock evaluated when incorporating ageing error, growth variability, or both, we also compute the proportion of 'base' ISS in order to present the relative decrease in ISS when incorporating these sources of additional uncertainty.
 The 'relative ISS' is computed by dividing the ISS as determined after incorporating ageing error, growth variability, or both, by the base ISS without these sources of uncertainty.
 
-## Evaluating life-history relationships to consequences of added uncertainty
+## 2.5 Evaluating life-history relationships to consequences of added uncertainty
 
 Trends across stocks were aggregated and evaluated using three species types: flatfish (arrowtooth flounder, flathead sole, northern rock sole, and yellowfin sole), gadids (walleye pollock and Pacific cod), and rockfish (Pacific ocean perch and northern rockfish).
 Two statistics were used to evaluate trends across the cases that added ageing error and growth variability.
@@ -229,7 +238,7 @@ We computed the CV in the tester ages for a given reader age, then averaged thes
 The second statistic we used to evaluate the influence of adding growth variability was the average CV in age-length data.
 We computed the average age-length CV by computing the CV in length for a given age, then averaging the CVs in length-at-age across age.
 
-# Results
+# 3. Results
 
 While the magnitude of age composition ISS was stock and region specific, there was a consistent reduction in age composition ISS as additional sources of uncertainty were introduced in the bootstrap procedure (Figure \@ref(fig:iss-plot)).
 This reduction in age composition ISS resulted for both sex-specific and total (combined sex) age composition ISS.
@@ -269,7 +278,7 @@ The relative ISS when adding growth variability resulted in the smallest range i
 On average, the relative ISS when adding both ageing error and growth variability was largest for rockfish, intermediate for flatfish, and smallest for gadids (bottom panel of Figure \@ref(fig:ae-gv-stats)).
 The same trend resulted when evaluating the range in the relative ISS when both ageing error and growth variability were added.
 
-# Discussion
+# 4. Discussion
 
 In this study we find that accounting for ageing error and growth variability using bootstrap procedures decreased age composition ISS for all stocks examined.
 The impact of the sources of uncertainty on resulting ISS was species type specific, with ageing error being more influential for rockfish than growth variability, and growth variability more influential than ageing error for flatfish and gadids.
@@ -323,6 +332,8 @@ Here we find that including additional sources of uncertainty has largest effect
 It is potentially the case that the effect of decreases in sampling effort for gadids and flatfish would be smaller given the magnitude of effect by these sources of uncertainty as compared to rockfish.
 However, we acknowledge that this should be evaluated in future studies to understand the specific effects on stocks and when comparing among species types.
 
+# 5. Conclusions
+
 Overall, we find that expanding upon the method introduced by @Stewart2017 by including ageing error and growth variability into estimation of age composition ISS can have large effect in reducing the magnitude of ISS.
 We provide two primary recommendations from this work.
 First, we recommend that stock assessment scientists consider the use of bootstrap methods like this one [which was developed from @Stewart2017] to set age and length composition ISS.
@@ -330,9 +341,26 @@ With modern computing power, for a single species using the package we built (<h
 Second, for all estimates of age composition ISS we recommend implementing ageing error and growth variability to more explicitly and thoroughly take these sources of uncertainty into account in stock assessment models.
 We note that while we used fishery-independent data here as an example, these sources of uncertainty would also be inherent to fishery-dependent data.
 
-# Acknowledgments
+# Acknowledgements
 
 We thank Dan Goethel and Cole Monnahan for their helpful reviews of this manuscript. We also thank all the AFSC survey staff who collected the data over the last 40 years used in this analysis.
+This research did not receive any specific grant from funding agencies in the public, commercial, or not-for-profit sectors.
+
+# Author contribution
+Conceptualization: P-JFH 
+Data curation: P-JFH
+Formal analysis: P-JFH 
+Funding acquisition: N/A 
+Investigation: P-JFH, BCW 
+Methodology: P-JFH, BCW 
+Project administration: P-JFH 
+Resources: N/A 
+Software: BCW, P-JFH 
+Supervision: P-JFH 
+Validation: P-JFH, BCW 
+Visualization: P-JFH, BCW 
+Writing – original draft: P-JFH, BCW 
+Writing – review & editing: P-JFH, BCW
 
 \newpage
 
