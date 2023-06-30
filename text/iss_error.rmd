@@ -52,10 +52,10 @@ source(here::here('R', "render_toc.R"))
 
 Statistical catch-at-age assessment models used for fisheries management integrate various sources of information that are statistically weighted in a joint likelihood framework; the relative statistical weighting between these sources of information is an important, yet often a subjective aspect of stock assessment.
 Input sample size (ISS) is a quantity that is used to statistically weight composition data in these types of models.
-Both design-based bootstrap and model-based estimators have been proposed, however, these previous methods to determine ISS do not explicitly include sources of uncertainty from ageing error and growth variability that are inherent to expanded age composition data.
+Both design-based bootstrap and model-based estimators have been proposed; however, these previous methods to determine ISS do not explicitly include sources of uncertainty from ageing error and growth variability that are inherent to expanded age composition data.
 In this study, we evaluate the impact of including ageing error and growth variability within bootstrap methods that estimate age composition ISS.
 We find that for all the stocks evaluated the ISS determined from bootstrap methods decreased as these addition sources of uncertainty were included.
-The decrease in ISS was species type specific, but generally decreased up to 40% when ageing error was introduced, up to 50% when growth variability was included, and up to 60% when both sources of uncertainty were included.
+The decrease in ISS was species type-specific, but generally decreased up to 40% when ageing error was introduced, up to 50% when growth variability was included, and up to 60% when both sources of uncertainty were included.
 These results indicate that there is more variability within age composition data than would be accounted for with ISS estimates that do not include these sources of uncertainty.
 The method and results provided here allow for assessment scientists to statistically weight age composition with ISS that takes into account ageing error and growth variability that are implicit to any expanded age composition from either fishery-independent or fishery-dependent sources.
 This has not previously been investigated and including these sources of uncertainty improves bootstrap estimates of ISS to capture all the sources of variability in age composition and will subsequently improve stock assessment model quality.
@@ -117,11 +117,11 @@ We show, in a step-wise process, the added variability in age composition sample
 ## 2.1 Data
 
 We used historical data collected from bottom trawl surveys conducted by the Alaska Fisheries Science Center (AFSC) in the Eastern Bering Sea [EBS: @Lauth2019], Aleutian Islands [AI: @vonSzalay2017], and Gulf of Alaska [GOA: @vonSzalay2018]. 
-Within the AFSC bottom trawl surveys both length frequency data and age specimen data are collected, in addition to other survey data (e.g., catch, effort, location). 
-Generally, a subsample of fish from each haul were processed at sea to collect their sex, length, and weight. 
-A subsample of these fish have their sagittal otoliths collected; these otoliths were sent (with haul and specimen data) to the AFSC Age and Growth laboratory for age determination. 
+Within the AFSC bottom trawl surveys, both length frequency data and age specimen data are collected, in addition to other survey data (e.g., catch, effort, location). 
+Generally, a subsample of fish from each haul are processed at sea to collect their sex, length, and weight. 
+A subsample of these fish have their sagittal otoliths collected and these otoliths are sent (with haul and specimen data) to the AFSC Age and Growth laboratory for age determination. 
 Periodically, a subset of aged otoliths are selected for reader-tester agreement tests.
-These tests are used to evaluate the reproducability of an age reading when two different readers age the same fish without knowledge of the other reader's age determination of the otolith [@Kimura1991]. 
+These tests are used to evaluate the reproducibility of an age reading when two different readers age the same fish without knowledge of the other reader's age determination of the otolith [@Kimura1991]. 
 The average annual bottom trawl survey age sample sizes by region, and the total number of otoliths used for reader-tester agreement tests are shown in Table \@ref(tab:species-samples)) for the species evaluated.
 The species or stocks selected for this analysis all have greater than 5,000 reader-tester paired otolith readings.
 These stocks are all assessed using integrated SCAA models that require input sample sizes for the age composition data. 
@@ -213,7 +213,7 @@ The bootstrap-simulation was developed in R [@Rcore] and is available via GitHub
 ## 2.4 Computing input sample size
 
 A useful statistic that can quantify the variability in age composition is relative sample size, introduced by @Mcallister1997.
-This statistic evaluates the amount of uncertainty in an estimated composition compared to an observed composition and is given by:
+This statistic evaluates the amount of uncertainty in an estimated composition compared to an observed composition and is given by
 
 \begin{equation}
  R_{i,y}\frac{\sum_{c=1}^{C}O_{c,y}(1-O_{c,y})}{\sum_{c=1}^{C}(E_{c,i,y}-O_{c,y})^2}
@@ -222,9 +222,9 @@ This statistic evaluates the amount of uncertainty in an estimated composition c
 where $E_{c,i,y}$ is the estimated proportion for category-*c* (which can be age or any other arbitrary category across which proportions are computed) for iteration-*i* in year-*y* and $O_{c,y}$ is the observed proportion.
 Here, the underlying age composition derived from the historical bottom trawl surveys with the full and unsampled data was treated as the observed proportions $O_{c,y}$ in equation \@ref(eq:eqn7).
 For each iteration-*i* of the bootstrap-simulation we computed an estimated proportion ($E_{c,i,y}$) that was then compared to the observed age composition ($O_{c,y}$) to determine the relative sample size ($R_{i,y}$) of the resampled age composition.
-Thus, across each iteration of the bootstrap-simulation we computed a relative sample size that indicated the amount of uncertainty in the resampled age composition.
+Thus, across each iteration of the bootstrap-simulation, we computed a relative sample size that indicated the amount of uncertainty in the resampled age composition.
 
-To summarize relative sample size across iterations we used the harmonic mean.
+To summarize relative sample size across iterations, we used the harmonic mean.
 This has been shown to reduce bias in recovering the true sample size in simulations for a multinomial distribution and has also been recommended to determine the ISS that is used in stock assessment models to fit compositional data [@Stewart2014].
 While we present the results of the annual ISS for each stock evaluated when incorporating ageing error, growth variability, or both, we also compute the proportion of 'base' ISS in order to present the relative decrease in ISS when incorporating these sources of additional uncertainty.
 The 'relative ISS' is computed by dividing the ISS as determined after incorporating ageing error, growth variability, or both, by the base ISS without these sources of uncertainty.
@@ -233,18 +233,18 @@ The 'relative ISS' is computed by dividing the ISS as determined after incorpora
 
 Trends across stocks were aggregated and evaluated using three species types: flatfish (arrowtooth flounder, flathead sole, northern rock sole, and yellowfin sole), gadids (walleye pollock and Pacific cod), and rockfish (Pacific ocean perch and northern rockfish).
 Two statistics were used to evaluate trends across the cases that added ageing error and growth variability.
-The first statistic we used to evaluate the influence of adding ageing error was the average coefficient of variation (CV) in age agreement.
+The first statistic that we used to evaluate the influence of adding ageing error was the average coefficient of variation (CV) in age agreement.
 We computed the CV in the tester ages for a given reader age, then averaged these CVs across the reader ages.
-The second statistic we used to evaluate the influence of adding growth variability was the average CV in age-length data.
+The second statistic that we used to evaluate the influence of adding growth variability was the average CV in age-length data.
 We computed the average age-length CV by computing the CV in length for a given age, then averaging the CVs in length-at-age across age.
 
 # 3. Results
 
-While the magnitude of age composition ISS was stock and region specific, there was a consistent reduction in age composition ISS as additional sources of uncertainty were introduced in the bootstrap procedure (Figure \@ref(fig:iss-plot)).
+While the magnitude of age composition ISS was stock- and region-specific, there was a consistent reduction in age composition ISS as additional sources of uncertainty were introduced in the bootstrap procedure (Figure \@ref(fig:iss-plot)).
 This reduction in age composition ISS resulted for both sex-specific and total (combined sex) age composition ISS.
-The relative magnitude of adding ageing error compared to growth variability was also stock and region specific.
+The relative magnitude of adding ageing error compared to growth variability was also stock- and region-specific.
 For example, adding ageing error to arrowtooth flounder age data resulted in smaller ISS than adding growth variability in the GOA, but larger ISS in the EBS.
-Variability in the age composition ISS across the scenarios evaluated was also stock and region specific, with Pacific cod and walleye pollock in the EBS having the greatest reduction in ISS and AI Atka mackerel having the least.
+Variability in the age composition ISS across the scenarios evaluated was also stock- and region-specific, with Pacific cod and walleye pollock in the EBS having the greatest reduction in ISS and AI Atka mackerel having the least.
 
 The age composition relative ISS across uncertainty scenarios revealed patterns across species types within each region evaluated (Figure \@ref(fig:prop-iss)).
 Including ageing error for rockfish had a larger proportional reduction in relative ISS than including growth variability.
@@ -265,10 +265,10 @@ Overall, adding both ageing error and growth variability decreased the relative 
 <!-- This increasing trend for rockfish and flatfish degraded as additional sources of uncertainty were added, but for each uncertainty case the trend was not one-to-one. -->
 <!-- In each of the uncertainty scenarios investigated the trend between age composition ISS and the number of hauls for gadids was different than that for rockfish and flatfish, and while there was a slight increase in age composition ISS as the number of hauls increased, it was not as large of an increase as that which resulted for rockfish and flatfish. -->
 
-A positive relationship is observed, by species group, between the number of age samples taken per haul and the age composition ISS per sampled haul (top panel of Figure \@ref(fig:iss-nss-hls)).
+A positive relationship was observed, by species group, between the number of age samples taken per haul and the age composition ISS per sampled haul (top panel of Figure \@ref(fig:iss-nss-hls)).
 However, as sources of uncertainty were added to age data this positive trend was dampened for each species type; this was particularly true for gadids as compared to flatfish and rockfish.
 Across species types the age composition ISS per haul was around half of the number of sampled ages per haul, though it was less for rockfish and gadids.
-The age composition ISS per haul was, on average, the largest for flatfish, followed by rockfish, and was the smallest for gadids (bottom panel of Figure \@ref(fig:iss-nss-hls)).
+The age composition ISS per haul was, on average, the largest for flatfish, followed by rockfish, and it was the smallest for gadids (bottom panel of Figure \@ref(fig:iss-nss-hls)).
 The variability in the age composition ISS per haul across years, regions, and sex categories was also the largest for flatfish compared to gadids and rockfish.
 
 Comparing between statistics for ageing error and growth variability resulted in different trends in the relative ISS by species types (top panels of Figure \@ref(fig:ae-gv-stats)).
@@ -280,11 +280,11 @@ The same trend resulted when evaluating the range in the relative ISS when both 
 
 # 4. Discussion
 
-In this study we find that accounting for ageing error and growth variability using bootstrap procedures decreased age composition ISS for all stocks examined.
-The impact of the sources of uncertainty on resulting ISS was species type specific, with ageing error being more influential for rockfish than growth variability, and growth variability more influential than ageing error for flatfish and gadids.
+In this study, we find that accounting for ageing error and growth variability using bootstrap procedures decreased age composition ISS for all stocks examined.
+The impact of the sources of uncertainty on resulting ISS was species type-specific, with ageing error being more influential for rockfish than growth variability, and growth variability more influential than ageing error for flatfish and gadids.
 We propose that these results are due to larger growth variability observed in gadids and flatfish compared to rockfish.
 Further, the effects of ageing error are not unexpected for rockfish, as they are so long-lived. 
-However, the average CV for reader-tester agreement was much larger for some flatfish stocks relative to the rockfish stocks evaluated, thus, there was some interaction between the number of age bins and ISS in this analysis.
+However, the average CV for reader-tester agreement was much larger for some flatfish stocks relative to the rockfish stocks evaluated; thus, there was some interaction between the number of age bins and ISS in this analysis.
 When considering both ageing error and growth uncertainty the largest reduction in ISS magnitude was for gadids, followed by flatfish, with the least effect observed for rockfish, though results varies by stock and region.
 
 It is well known that misspecification of ISS when fitting compositional data can lead to bias results in assessment model predictions [e.g., @Stewart2017; @Xu2020].
@@ -297,7 +297,7 @@ Future investigations into the impacts of adding ageing error and growth variabi
 
 A number of operational assessment models use hauls as a proxy in some form when setting ISS for age and length composition data [e.g., @Hulson2021; @Barbeaux2022].
 This is derived from a result found in @Pennington2000 who investigated length frequency sampling and, based on the level of intra-haul correlation, determined that for the species that were investigated, on average, the ISS was one fish per haul.
-However, we note that the conclusion made in @Pennington2000 was not that the number of hauls should be used as a proxy for ISS in the assessment model data fitting procedure, but, rather, that in order to potentially increase the ISS and have a better estimate of the level of intra-haul correlation that samples should be taken from an increased number of hauls.
+However, we note that the conclusion made in @Pennington2000 was not that the number of hauls should be used as a proxy for ISS in the assessment model data fitting procedure, but rather that in order to potentially increase the ISS and have a better estimate of the level of intra-haul correlation, samples should be taken from an increased number of hauls.
 This result was further substantiated in @Siskey2023, who also suggested that increasing the number of hauls sampled for age, while decreasing the sampling effort on any given haul, was preferable to increasing the sampling effort within any given haul at the expense of sampling from a greater number of hauls.
 Here we find that the age composition ISS per haul was dependent on the species type, had a large range depending on the type of error included in determining ISS, and was generally larger than one fish per haul.
 
@@ -313,18 +313,18 @@ Here we find that the age composition ISS per haul was dependent on the species 
 <!-- Thus, we recommend that the use of hauls as a proxy for ISS be discontinued when using stock assessment models to fit age and length composition data, and rather, assessment scientists consider implementing a bootstrap procedure as shown here to use for setting ISS. -->
 <!-- As suggested in @Stewart2014, we agree that the bootstrap ISS can be used in a stock assessment model as the 'maximum' sample size. -->
 
-Previous work has investigated both the inclusion of ageing error [@Punt2008; @Liao2013] and growth [@Taylor2013] within stock assessment models, however, none have applied these additional sources of uncertainty in the context of estimating ISS.
+Previous work has investigated both the inclusion of ageing error [@Punt2008; @Liao2013] and growth [@Taylor2013] within stock assessment models; however, none have applied these additional sources of uncertainty in the context of estimating ISS.
 As it pertains to ageing error, in many current assessments an ageing error matrix is implemented [e.g., @Williams2022] in order to account for ageing error that is inherent to the age composition data.
 Use of an ageing error matrix effectively 'smudges' assessment model estimates of population-at-age into adjacent age classes prior to fitting the observed proportions in the age composition input data from either fishery-independent or fishery-dependent sources.
-Then, in the model fitting step, an ISS is used to fit the models 'smudged' estimates of age composition to the observed age composition.
+Then, in the model-fitting step, an ISS is used to fit the models 'smudged' estimates of age composition to the observed age composition.
 Here, we suggest that unless ageing error is accounted for in the age composition ISS used to fit these data then we are likely 'over-fitting' the model estimates to the 'observed' age composition and that the use of only an ageing error matrix half-way accounts for this source of uncertainty in the assessment modeling process.
 The results from this study suggest that in some cases the addition of ageing error to the bootstrap method decreases the age composition ISS to such an extent that an ISS that does not take into account this source of uncertainty can be 125-165% too large.
 
-It is commonly the case that age composition is produced through a two-stage expansion process [@QuinnDeriso1999], in which length frequency data is expanded to population-at-length in the first stage, and an ALK is used to expand population-at-length to population-at-age in the second stage [@Ailloud2019].
+It is commonly the case that age composition is produced through a two-stage expansion process [@QuinnDeriso1999] in which length frequency data are expanded to population-at-length in the first stage, and an ALK is used to expand population-at-length to population-at-age in the second stage [@Ailloud2019].
 In the second-stage of this expansion process, the ALK is produced through the use of age-length paired data that are obtained in the age sampling collection, and within the ALK the variability in length-at-age is implicitly accounted for.
 However, there have been no previous attempts to include this source of variability when considering the ISS that is used to fit the expanded age composition data.
-We find that the magnitude of effect on age composition ISS is species type dependent, in which a larger effect results for species that exhibit larger variability in growth, for example, gadids and flatfish compared to rockfish.
-When implementing growth variability there was a 10-50% decrease in the magnitude of bootstrapped age composition ISS, thus, if not taking this source of uncertainty into account the ISS can be up to 200% too large.
+We find that the magnitude of effect on age composition ISS is species type-dependent, in which a larger effect results for species that exhibit larger variability in growth; for example, gadids and flatfish compared to rockfish.
+When implementing growth variability, there was a 10-50% decrease in the magnitude of bootstrapped age composition ISS; thus, if not taking this source of uncertainty into account the ISS can be up to 200% too large.
 
 An additional consideration is understanding effects of survey reduction effort, which has recently been the focus of a number of studies [@ICES2020; @ICES2023], as survey reductions may be inevitable in many regions due to declining budgets.
 A recent study investigated the reductions in length frequency and age collection effort, using AFSC bottom trawl survey as example [@Hulson2023c] and found that reduction in age collections had larger effect on age composition uncertainty for flatfish and rockfish as compared to gadids.
@@ -337,7 +337,7 @@ However, we acknowledge that this should be evaluated in future studies to under
 Overall, we find that expanding upon the method introduced by @Stewart2017 by including ageing error and growth variability into estimation of age composition ISS can have large effect in reducing the magnitude of ISS.
 We provide two primary recommendations from this work.
 First, we recommend that stock assessment scientists consider the use of bootstrap methods like this one [which was developed from @Stewart2017] to set age and length composition ISS.
-With modern computing power, for a single species using the package we built (<https://github.com/BenWilliams-NOAA/surveyISS>), it takes less than an hour to obtain both age and length composition bootstrap ISS for a historical survey time series (longer than 40 years in some cases); for a single year it takes a matter of minutes.
+With modern computing power, for a single species using the that package we built (<https://github.com/BenWilliams-NOAA/surveyISS>), it takes less than an hour to obtain both age and length composition bootstrap ISS for a historical survey time series (longer than 40 years in some cases); for a single year it takes a matter of minutes.
 Second, for all estimates of age composition ISS we recommend implementing ageing error and growth variability to more explicitly and thoroughly take these sources of uncertainty into account in stock assessment models.
 We note that while we used fishery-independent data here as an example, these sources of uncertainty would also be inherent to fishery-dependent data.
 
