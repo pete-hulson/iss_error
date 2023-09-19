@@ -404,75 +404,75 @@ dev.off()
 
 
 
-# plot iss and nss per haul with added error (figure 7) ----
+# plot iss and nss per haul with added error (not including this for now) ----
 
-plot_dat %>% 
-  select(year, species_code, comp_type, ae, ae_al, al, base, nhls, nss, region) %>% 
-  tidytable::left_join(spec) %>% 
-  tidytable::mutate(ae_hl = ae / nhls,
-                    al_hl = al / nhls,
-                    ae_al_hl = ae_al / nhls,
-                    base_hl = base / nhls,
-                    n_hl = nss/ nhls) %>% 
-  tidytable::pivot_longer(cols = c(ae_hl, al_hl, ae_al_hl, base_hl)) %>% 
-  tidytable::mutate(err_src = case_when(name == 'ae_hl' ~ 'AE',
-                                        name == 'al_hl' ~ 'GV',
-                                        name == 'ae_al_hl' ~ 'AE & GV',
-                                        name == 'base_hl' ~ 'Base'),
-                    surv_labs = case_when(region == 'goa' ~ "Gulf of Alaska",
-                                          region == 'ai' ~ "Aleutian Islands",
-                                          region == 'bs' ~ "eastern Bering Sea shelf"),
-                    err_src = factor(err_src, level = c('Base', 'AE', 'GV', 'AE & GV')),
-                    surv_labs = factor(surv_labs)) %>% 
-  tidytable::filter(species_type != 'other') -> hls_dat
-
-hls_dat %>% 
-  ggplot(aes(n_hl, value, color = err_src)) +
-  geom_point(alpha = 0.3) +
-  geom_abline(slope = 1, intercept = 0, lty=3) +
-  facet_grid( ~ species_type,
-              labeller = labeller(region = surv_labs)) +
-  xlab("\nNumber of age samples per sampled haul") +
-  ylab("Age composition input sample size per sampled haul\n") +
-  labs(pch = "Stock") +
-  scale_color_scico_d(palette = 'roma',
-                      name = "Species type") + 
-  scale_fill_scico_d(palette = 'roma',
-                     name = "Species type") +
-  theme(legend.position = "none") + 
-  geom_smooth(method = 'lm',
-              formula = y ~ x) +
-  ggpmisc::stat_poly_eq(label.x = "left",
-                        label.y = "top", 
-                        formula = y ~ x,
-                        parse = TRUE) -> p1
-
-hls_dat %>% 
-  tidytable::drop_na() %>% 
-  ggplot(aes(err_src, value, fill = err_src)) +
-  geom_boxplot2(width.errorbar = 0, alpha= 0.5) +
-  facet_grid( ~ species_type) +
-  xlab("\nUncertainty scenario") +
-  ylab("Age composition input sample size per sampled haul") +
-  scale_color_scico_d(palette = 'roma') + 
-  scale_fill_scico_d(palette = 'roma', alpha = 0.5) + 
-  theme(legend.position = "none") -> p2
-
-ggpubr::ggarrange(p1 + ggpubr::rremove("ylab"),
-                  p2 + ggpubr::rremove("ylab"),
-                  ncol= 1) -> fig
-
-
-png(filename=here::here("figs", "iss_vs_nss_hls.png"), 
-    width = 6.5, height = 8.0,
-    units = "in", res=200)
-
-ggpubr::annotate_figure(fig, 
-                        left = grid::textGrob("Age composition ISS per sampled haul\n", 
-                                              rot = 90, vjust = 0.5, 
-                                              gp = grid::gpar(cex = 1, fontface="plain", fontfamily="Times New Roman")))
-
-dev.off()
+# plot_dat %>% 
+#   select(year, species_code, comp_type, ae, ae_al, al, base, nhls, nss, region) %>% 
+#   tidytable::left_join(spec) %>% 
+#   tidytable::mutate(ae_hl = ae / nhls,
+#                     al_hl = al / nhls,
+#                     ae_al_hl = ae_al / nhls,
+#                     base_hl = base / nhls,
+#                     n_hl = nss/ nhls) %>% 
+#   tidytable::pivot_longer(cols = c(ae_hl, al_hl, ae_al_hl, base_hl)) %>% 
+#   tidytable::mutate(err_src = case_when(name == 'ae_hl' ~ 'AE',
+#                                         name == 'al_hl' ~ 'GV',
+#                                         name == 'ae_al_hl' ~ 'AE & GV',
+#                                         name == 'base_hl' ~ 'Base'),
+#                     surv_labs = case_when(region == 'goa' ~ "Gulf of Alaska",
+#                                           region == 'ai' ~ "Aleutian Islands",
+#                                           region == 'bs' ~ "eastern Bering Sea shelf"),
+#                     err_src = factor(err_src, level = c('Base', 'AE', 'GV', 'AE & GV')),
+#                     surv_labs = factor(surv_labs)) %>% 
+#   tidytable::filter(species_type != 'other') -> hls_dat
+# 
+# hls_dat %>% 
+#   ggplot(aes(n_hl, value, color = err_src)) +
+#   geom_point(alpha = 0.3) +
+#   geom_abline(slope = 1, intercept = 0, lty=3) +
+#   facet_grid( ~ species_type,
+#               labeller = labeller(region = surv_labs)) +
+#   xlab("\nNumber of age samples per sampled haul") +
+#   ylab("Age composition input sample size per sampled haul\n") +
+#   labs(pch = "Stock") +
+#   scale_color_scico_d(palette = 'roma',
+#                       name = "Species type") + 
+#   scale_fill_scico_d(palette = 'roma',
+#                      name = "Species type") +
+#   theme(legend.position = "none") + 
+#   geom_smooth(method = 'lm',
+#               formula = y ~ x) +
+#   ggpmisc::stat_poly_eq(label.x = "left",
+#                         label.y = "top", 
+#                         formula = y ~ x,
+#                         parse = TRUE) -> p1
+# 
+# hls_dat %>% 
+#   tidytable::drop_na() %>% 
+#   ggplot(aes(err_src, value, fill = err_src)) +
+#   geom_boxplot2(width.errorbar = 0, alpha= 0.5) +
+#   facet_grid( ~ species_type) +
+#   xlab("\nUncertainty scenario") +
+#   ylab("Age composition input sample size per sampled haul") +
+#   scale_color_scico_d(palette = 'roma') + 
+#   scale_fill_scico_d(palette = 'roma', alpha = 0.5) + 
+#   theme(legend.position = "none") -> p2
+# 
+# ggpubr::ggarrange(p1 + ggpubr::rremove("ylab"),
+#                   p2 + ggpubr::rremove("ylab"),
+#                   ncol= 1) -> fig
+# 
+# 
+# png(filename=here::here("figs", "iss_vs_nss_hls.png"), 
+#     width = 6.5, height = 8.0,
+#     units = "in", res=200)
+# 
+# ggpubr::annotate_figure(fig, 
+#                         left = grid::textGrob("Age composition ISS per sampled haul\n", 
+#                                               rot = 90, vjust = 0.5, 
+#                                               gp = grid::gpar(cex = 1, fontface="plain", fontfamily="Times New Roman")))
+# 
+# dev.off()
 
 
 
@@ -754,7 +754,7 @@ dev.off()
 # compare pre/post aggregation (1cm bin, annual) ----
 
 png(filename = here::here("figs", "supp_mat", "prepost.png"), 
-    width = 6.5, height = 6.5,
+    width = 6.5, height = 5,
     units = "in", res = 200)
 
 plot_dat %>% 
@@ -807,7 +807,7 @@ plot_dat %>%
   xlab("\nUncertainty scenario") +
   ylab("") +
   scale_fill_scico_d(palette = 'roma',
-                     name = "Composition type")
+                     name = "Aggregation treatment")
 
 dev.off() 
 
