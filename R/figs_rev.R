@@ -140,12 +140,17 @@ if(!file.exists(here::here('output', 'afsc_iss_err_full.csv'))){
 surv_labs <- c("Aleutian Isalnds", "Eastern Bering Sea Shelf", "Gulf of Alaska")
 names(surv_labs) <- c("ai", "bs", "goa")
 
+# clean up names to make nice for plotting
+plot_dat %>% 
+  tidytable::mutate(comp_type = case_when(comp_type == 'female' ~ 'Female',
+                                          comp_type == 'male' ~ 'Male',
+                                          comp_type == 'total' ~ 'Total')) -> plot_dat
 
 
-# plot relative iss with added error for sex category by species type (figure 2) ----
+# plot relative iss with added error for sex category by species type, 1 cm and pooled (figure 2) ----
 
 png(filename = here::here("figs", "sex_iss.png"), 
-    width = 6.5, height = 8.0,
+    width = 6.5, height = 5.0,
     units = "in", res = 200)
 
 plot_dat %>% 
@@ -166,6 +171,9 @@ plot_dat %>%
                     err_src = factor(err_src, level = c('Base', 'AE', 'GV', 'AE & GV'))) %>%
   tidytable::left_join(spec) %>%
   tidytable::filter(species_type != "other") %>% 
+  tidytable::mutate(species_type = case_when(species_type == 'flatfish' ~ 'Flatfish',
+                                             species_type == 'rockfish' ~ 'Rockfish',
+                                             species_type == 'gadid' ~ 'Gadid')) %>% 
   ggplot(aes(comp_type, value, fill = err_src)) +
   geom_boxplot2(width.errorbar = 0, 
                 width = 0.9,
@@ -173,7 +181,7 @@ plot_dat %>%
                 alpha = 0.5) +
   facet_grid(iss_type ~ species_type,
              scales = "free_y",
-             labeller = label_wrap_gen(30),
+             labeller = label_wrap_gen(20),
              switch = "y") +
   ylab("\n") +
   xlab("\nAge composition sex category") +
@@ -191,7 +199,7 @@ dev.off()
 # compare pooled vs annual growth for 1 cm bins (figure 3), avg across sex categories ----
 
 png(filename = here::here("figs", "grwth_iss.png"), 
-    width = 6.5, height = 8.0,
+    width = 6.5, height = 5.0,
     units = "in", res = 200)
 
 plot_dat %>% 
@@ -214,11 +222,14 @@ plot_dat %>%
   tidytable::summarise(value = mean(value), .by = c(year, species_code, name, grwth, err_src, iss_type)) %>% 
   tidytable::left_join(spec) %>% 
   tidytable::filter(species_type != 'other') %>% 
+  tidytable::mutate(species_type = case_when(species_type == 'flatfish' ~ 'Flatfish',
+                                             species_type == 'rockfish' ~ 'Rockfish',
+                                             species_type == 'gadid' ~ 'Gadid')) %>% 
   ggplot(aes(grwth, value, fill = err_src)) +
   geom_boxplot2(width.errorbar = 0, alpha= 0.5) +
   facet_grid(iss_type ~ species_type, 
              scales = "free_y",
-             labeller = label_wrap_gen(30),
+             labeller = label_wrap_gen(20),
              switch = "y") +
   theme(legend.position = "bottom",
         strip.text.y.right = element_text(angle = 270),
@@ -234,7 +245,7 @@ dev.off()
 # compare bin sizes for annual growth (figure 4) ----
 
 png(filename = here::here("figs", "bin_iss.png"), 
-    width = 6.5, height = 8.0,
+    width = 6.5, height = 5.0,
     units = "in", res = 200)
 
 plot_dat %>% 
@@ -258,11 +269,14 @@ plot_dat %>%
                     err_src = factor(err_src, level = c('Base', 'AE', 'GV', 'AE & GV'))) %>% 
   tidytable::summarise(value = mean(value), .by = c(year, species_code, name, bin, err_src, iss_type)) %>% 
   tidytable::left_join(spec) %>% 
+  tidytable::mutate(species_type = case_when(species_type == 'flatfish' ~ 'Flatfish',
+                                             species_type == 'rockfish' ~ 'Rockfish',
+                                             species_type == 'gadid' ~ 'Gadid')) %>% 
   ggplot(aes(bin, value, fill = err_src)) +
   geom_boxplot2(width.errorbar = 0, alpha= 0.5) +
   facet_grid(iss_type ~ species_type, 
              scales = "free_y",
-             labeller = label_wrap_gen(30),
+             labeller = label_wrap_gen(20),
              switch = "y") +
   theme(legend.position = "bottom",
         strip.text.y.right = element_text(angle = 270),
@@ -276,13 +290,83 @@ plot_dat %>%
 dev.off()
 
 
-# plot caal results (figure 5) ----
+# compare pre/post aggregation for 1cm bin & annual(figure 5) ----
 
-png(filename = here::here("figs", "caal_iss.png"), 
-    width = 6.5, height = 6.5,
+png(filename = here::here("figs", "prepost_iss.png"), 
+    width = 6.5, height = 5.0,
     units = "in", res = 200)
 
-vroom::vroom(here::here('output', 'pcod_caal_iss_ag.csv')) %>% 
+plot_dat %>% 
+  tidytable::filter(species_code %in% c(21720, 30060) & 
+                      bin == '1cm' & grwth == 'Annual' & 
+                      comp_type == 'Total' & 
+                      region == 'goa') %>% 
+  tidytable::select(year, species_code, comp_type, ae, ae_al, al, base, bin, grwth) %>% 
+  tidytable::left_join(vroom::vroom(here::here('output', 'popoll_prepost_iss_ag.csv')) %>% 
+                         tidytable::rename(ae_pre = 'ae',
+                                           ae_al_pre = 'ae_al',
+                                           al_pre = 'al',
+                                           base_pre = 'base') %>% 
+                         tidytable::mutate(comp_type = case_when(comp_type == 'female' ~ 'Female',
+                                                                 comp_type == 'male' ~ 'Male',
+                                                                 comp_type == 'total' ~ 'Total'))) %>% 
+  tidytable::mutate(ae_rel = ae / base,
+                    ae_al_rel = ae_al / base,
+                    al_rel = al / base,
+                    base_rel = 1,
+                    ae_pre_rel = ae_pre / base_pre,
+                    ae_al_pre_rel = ae_al_pre / base_pre,
+                    al_pre_rel = al_pre / base_pre,
+                    base_pre_rel = 1) %>% 
+  tidytable::pivot_longer(cols = c(ae, ae_al, al, base, 
+                                   ae_pre, ae_al_pre, al_pre, base_pre,
+                                   ae_rel, ae_al_rel, al_rel, base_rel, 
+                                   ae_pre_rel, ae_al_pre_rel, al_pre_rel, base_pre_rel)) %>%
+  tidytable::mutate(pool_type = case_when(name %in% c('ae', 'ae_al', 'al', 'base',
+                                                      'ae_rel', 'ae_al_rel', 'al_rel', 'base_rel') ~ 'Post-expansion',
+                                          name %in% c('ae_pre', 'ae_al_pre', 'al_pre', 'base_pre',
+                                                      'ae_pre_rel', 'ae_al_pre_rel', 'al_pre_rel', 'base_pre_rel') ~ 'Pre-expansion'),
+                    err_src = case_when(name %in% c('ae', 'ae_pre', 'ae_rel', 'ae_pre_rel') ~ 'AE',
+                                        name %in% c('al', 'al_pre', 'al_rel', 'al_pre_rel') ~ 'GV',
+                                        name %in% c('ae_al', 'ae_al_pre', 'ae_al_rel', 'ae_al_pre_rel') ~ 'AE & GV',
+                                        name %in% c('base', 'base_pre', 'base_rel', 'base_pre_rel') ~ 'Base'),
+                    iss_type = case_when(name %in% c('ae', 'ae_al', 'al', 'base',
+                                                     'ae_pre', 'ae_al_pre', 'al_pre', 'base_pre') ~ 'Age composition ISS',
+                                         name %in% c('ae_rel', 'ae_al_rel', 'al_rel', 'base_rel',
+                                                     'ae_pre_rel', 'ae_al_pre_rel', 'al_pre_rel', 'base_pre_rel') ~ 'Relative age composition ISS'),
+                    err_src = factor(err_src, level = c('Base', 'AE', 'GV', 'AE & GV'))) %>%
+  tidytable::left_join(spec) %>% 
+  tidytable::mutate(species_type = case_when(species_type == 'flatfish' ~ 'Flatfish',
+                                             species_type == 'rockfish' ~ 'Rockfish',
+                                             species_type == 'gadid' ~ 'Gadid')) %>% 
+  tidytable::mutate(stock = paste0(species_type, " (GOA ", species_name, ")")) %>% 
+  ggplot(aes(pool_type, value, fill = err_src)) +
+  geom_boxplot2(width.errorbar = 0, alpha= 0.5) +
+  facet_grid(iss_type ~ stock, 
+             scales = "free_y",
+             labeller = label_wrap_gen(20),
+             switch = "y") +
+  theme(legend.position = "bottom",
+        strip.text.y.right = element_text(angle = 270),
+        strip.text = element_text(size = 12),
+        strip.placement = "outside") +
+  xlab("\nAggregation treatment") +
+  ylab("") +
+  scale_fill_scico_d(palette = 'roma',
+                     name = "Uncertainty scenario")
+
+dev.off() 
+
+
+
+
+# plot caal results (figure 6) ----
+
+png(filename = here::here("figs", "caal_iss.png"), 
+    width = 6.5, height = 5.0,
+    units = "in", res = 200)
+
+vroom::vroom(here::here('output', 'goa_caal_iss_ag.csv')) %>% 
   tidytable::summarise(ae = mean(ae, na.rm = TRUE),
                        al = mean(al, na.rm = TRUE),
                        ae_al = mean(ae_al, na.rm = TRUE),
@@ -290,7 +374,10 @@ vroom::vroom(here::here('output', 'pcod_caal_iss_ag.csv')) %>%
   tidytable::mutate(ae_rel = ae / base,
                     ae_al_rel = ae_al / base,
                     al_rel = al / base,
-                    base_rel = 1) %>% 
+                    base_rel = 1,
+                    comp_type = case_when(comp_type == 'female' ~ 'Female',
+                                          comp_type == 'male' ~ 'Male',
+                                          comp_type == 'total' ~ 'Total')) %>% 
   tidytable::pivot_longer(cols = c(ae, ae_al, al, base,
                                    ae_rel, ae_al_rel, al_rel, base_rel)) %>% 
   tidytable::mutate(err_src = case_when(name %in% c('ae', 'ae_rel') ~ 'AE',
@@ -301,11 +388,15 @@ vroom::vroom(here::here('output', 'pcod_caal_iss_ag.csv')) %>%
                                          name %in% c('ae_rel', 'ae_al_rel', 'al_rel', 'base_rel') ~ 'Relative conditional age-at-length ISS'),
                     err_src = factor(err_src, level = c('Base', 'AE', 'GV', 'AE & GV'))) %>% 
   tidytable::left_join(spec) %>% 
+  tidytable::mutate(species_type = case_when(species_type == 'flatfish' ~ 'Flatfish',
+                                             species_type == 'rockfish' ~ 'Rockfish',
+                                             species_type == 'gadid' ~ 'Gadid')) %>% 
+  tidytable::mutate(stock = paste0(species_type, " (GOA ", species_name, ")")) %>% 
   ggplot(aes(comp_type, value, fill = err_src)) +
   geom_boxplot2(width.errorbar = 0, alpha= 0.5) +
-  facet_grid(iss_type ~ species_name, 
+  facet_grid(iss_type ~ stock, 
              scales = "free_y",
-             labeller = label_wrap_gen(30),
+             labeller = label_wrap_gen(20),
              switch = "y") +
   theme(legend.position = "bottom",
         strip.text.y.right = element_text(angle = 270),
@@ -320,11 +411,15 @@ dev.off()
 
 
 
-# plot iss and nss with added error (figure 6) ----
+
+# plot iss and nss with added error (figure 7) ----
 
 plot_dat %>% 
   select(year, species_code, comp_type, ae, ae_al, al, base, nhls, nss, region) %>% 
   tidytable::left_join(spec) %>% 
+  tidytable::mutate(species_type = case_when(species_type == 'flatfish' ~ 'Flatfish',
+                                             species_type == 'rockfish' ~ 'Rockfish',
+                                             species_type == 'gadid' ~ 'Gadid')) %>% 
   tidytable::mutate(ae_ss = ae / nss,
                     al_ss = al / nss,
                     ae_al_ss = ae_al / nss,
@@ -485,6 +580,9 @@ dev.off()
 plot_dat %>% 
   tidytable::filter(bin == '1cm' & grwth == 'Annual') %>%
   tidytable::left_join(spec) %>%
+  tidytable::mutate(species_type = case_when(species_type == 'flatfish' ~ 'Flatfish',
+                                             species_type == 'rockfish' ~ 'Rockfish',
+                                             species_type == 'gadid' ~ 'Gadid')) %>% 
   tidytable::mutate(prop_ae = ae / base,
                     prop_al = al / base,
                     prop_ae_al = ae_al / base) %>% 
@@ -542,6 +640,9 @@ plot_dat %>%
 plot_dat %>% 
   tidytable::filter(bin == '1cm' & grwth == 'Annual') %>%
   tidytable::left_join(spec) %>%
+  tidytable::mutate(species_type = case_when(species_type == 'flatfish' ~ 'Flatfish',
+                                             species_type == 'rockfish' ~ 'Rockfish',
+                                             species_type == 'gadid' ~ 'Gadid')) %>% 
   tidytable::mutate(prop_ae = ae / base,
                     prop_al = al / base,
                     prop_ae_al = ae_al / base) %>% 
@@ -576,7 +677,7 @@ ggpubr::ggarrange(ggpubr::ggarrange(p1, p2, ncol = 2),
                   nrow = 2) -> fig
 
 png(filename = here::here("figs", "lh_iss.png"),
-    width = 6.5, height = 6.5,
+    width = 6.5, height = 8.0,
     units = "in", res = 200)
 
 ggpubr::annotate_figure(fig, 
@@ -585,13 +686,6 @@ ggpubr::annotate_figure(fig,
                                               gp = grid::gpar(cex = 1, fontface="plain", fontfamily="Times New Roman")))
 
 dev.off()
-
-
-
-
-
-
-
 
 
 
@@ -747,67 +841,6 @@ plot_dat %>%
   scale_y_continuous(breaks = c(0, 250, 500)) +
   expand_limits(y=c(0, 250))
 # scale_y_continuous(breaks  = c(0, 200, 00))
-
-dev.off() 
-
-
-# compare pre/post aggregation (1cm bin, annual) ----
-
-png(filename = here::here("figs", "supp_mat", "prepost.png"), 
-    width = 6.5, height = 5,
-    units = "in", res = 200)
-
-plot_dat %>% 
-  tidytable::filter(species_code %in% c(21720, 30060) & 
-                      bin == '1cm' & grwth == 'Annual' & 
-                      comp_type == 'total' & 
-                      region == 'goa') %>% 
-  tidytable::select(year, species_code, comp_type, ae, ae_al, al, base, bin, grwth) %>% 
-  tidytable::left_join(vroom::vroom(here::here('output', 'popoll_prepost_iss_ag.csv')) %>% 
-                         tidytable::rename(ae_pre = 'ae',
-                                           ae_al_pre = 'ae_al',
-                                           al_pre = 'al',
-                                           base_pre = 'base')) %>% 
-  tidytable::mutate(ae_rel = ae / base,
-                    ae_al_rel = ae_al / base,
-                    al_rel = al / base,
-                    base_rel = 1,
-                    ae_pre_rel = ae_pre / base_pre,
-                    ae_al_pre_rel = ae_al_pre / base_pre,
-                    al_pre_rel = al_pre / base_pre,
-                    base_pre_rel = 1) %>% 
-  tidytable::pivot_longer(cols = c(ae, ae_al, al, base, 
-                                   ae_pre, ae_al_pre, al_pre, base_pre,
-                                   ae_rel, ae_al_rel, al_rel, base_rel, 
-                                   ae_pre_rel, ae_al_pre_rel, al_pre_rel, base_pre_rel)) %>%
-  tidytable::mutate(pool_type = case_when(name %in% c('ae', 'ae_al', 'al', 'base',
-                                                      'ae_rel', 'ae_al_rel', 'al_rel', 'base_rel') ~ 'post',
-                                          name %in% c('ae_pre', 'ae_al_pre', 'al_pre', 'base_pre',
-                                                      'ae_pre_rel', 'ae_al_pre_rel', 'al_pre_rel', 'base_pre_rel') ~ 'pre'),
-                    err_src = case_when(name %in% c('ae', 'ae_pre', 'ae_rel', 'ae_pre_rel') ~ 'AE',
-                                        name %in% c('al', 'al_pre', 'al_rel', 'al_pre_rel') ~ 'GV',
-                                        name %in% c('ae_al', 'ae_al_pre', 'ae_al_rel', 'ae_al_pre_rel') ~ 'AE & GV',
-                                        name %in% c('base', 'base_pre', 'base_rel', 'base_pre_rel') ~ 'Base'),
-                    iss_type = case_when(name %in% c('ae', 'ae_al', 'al', 'base',
-                                                     'ae_pre', 'ae_al_pre', 'al_pre', 'base_pre') ~ 'Age composition ISS',
-                                         name %in% c('ae_rel', 'ae_al_rel', 'al_rel', 'base_rel',
-                                                     'ae_pre_rel', 'ae_al_pre_rel', 'al_pre_rel', 'base_pre_rel') ~ 'Relative age composition ISS'),
-                    err_src = factor(err_src, level = c('Base', 'AE', 'GV', 'AE & GV'))) %>%
-  tidytable::left_join(spec) %>% 
-  ggplot(aes(err_src, value, fill = pool_type)) +
-  geom_boxplot2(width.errorbar = 0, alpha= 0.5) +
-  facet_grid(iss_type ~ species_name, 
-             scales = "free_y",
-             labeller = label_wrap_gen(40),
-             switch = "y") +
-  theme(legend.position = "bottom",
-        strip.text.y.right = element_text(angle = 270),
-        strip.text = element_text(size = 12),
-        strip.placement = "outside") +
-  xlab("\nUncertainty scenario") +
-  ylab("") +
-  scale_fill_scico_d(palette = 'roma',
-                     name = "Aggregation treatment")
 
 dev.off() 
 
