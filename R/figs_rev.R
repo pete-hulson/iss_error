@@ -487,7 +487,7 @@ ggpubr::ggarrange(p1 + ggpubr::rremove("ylab"),
                   ncol= 1) -> fig
 
 png(filename = here::here("figs", "iss_vs_nss.png"), 
-    width = 6.5, height = 8.0,
+    width = 6.5, height = 7.0,
     units = "in", res = 200)
 
 ggpubr::annotate_figure(fig, 
@@ -658,17 +658,17 @@ plot_dat %>%
   tidytable::summarise(mean_ae = mean(value, na.rm = TRUE),
                        lci_hl = quantile(value, probs = 0.025, na.rm = TRUE),
                        uci_hl = quantile(value, probs = 0.975, na.rm = TRUE), 
-                       .by = c(species_name, species_type)) %>% 
-  ggplot(aes(reorder(species_name, -mean_ae), mean_ae, fill = species_type)) +
+                       .by = c(species_type)) %>% 
+  ggplot(aes(reorder(species_type, -mean_ae), mean_ae, fill = species_type)) +
   geom_bar(stat = "identity", alpha = 0.5) +
-  geom_errorbar(aes(x = reorder(species_name, mean_ae), 
+  geom_errorbar(aes(x = reorder(species_type, mean_ae), 
                     ymin = lci_hl, ymax = uci_hl), 
                 width = 0) +
   scale_fill_scico_d(palette = 'roma',
                      name = "") + 
   theme(axis.text.x = element_text(angle = -45, hjust = 0),
         axis.title.x = element_blank(),
-        legend.position = c(0.47, 0.9)) +
+        legend.position = "none") +
   ylab("AE & GV") +
   ylim(0, 1.3) -> p3
 
@@ -677,7 +677,7 @@ ggpubr::ggarrange(ggpubr::ggarrange(p1, p2, ncol = 2),
                   nrow = 2) -> fig
 
 png(filename = here::here("figs", "lh_iss.png"),
-    width = 6.5, height = 8.0,
+    width = 6.5, height = 6.0,
     units = "in", res = 200)
 
 ggpubr::annotate_figure(fig, 
