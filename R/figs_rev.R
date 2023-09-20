@@ -608,7 +608,7 @@ plot_dat %>%
                     err_src = factor(err_src)) %>% 
   tidytable::filter(err_src == 'AE', species_type != 'other') %>% 
   ggplot(.,aes(x = age_range, y = value, color = as.factor(species_type))) +
-  geom_point() +
+  geom_point(alpha = 0.3) +
   xlab("Age range (years)") +
   ylab("AE") +
   scale_color_scico_d(palette = 'roma',
@@ -637,7 +637,7 @@ plot_dat %>%
                     err_src = factor(err_src)) %>% 
   tidytable::filter(err_src == 'GV', species_type != 'other') %>% 
   ggplot(.,aes(x = len_range, y = value, color = as.factor(species_type))) +
-  geom_point() +
+  geom_point(alpha = 0.3) +
   xlab("Length range (cm)") +
   ylab("GV") +
   scale_color_scico_d(palette = 'roma',
