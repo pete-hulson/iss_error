@@ -219,7 +219,8 @@ plot_dat %>%
                                          name %in% c('ae_rel', 'ae_al_rel', 'al_rel', 'base_rel',
                                                      'ae_ann_rel', 'ae_al_ann_rel', 'al_ann_rel', 'base_ann_rel') ~ 'Relative age composition ISS'),
                     err_src = factor(err_src, level = c('Base', 'AE', 'GV', 'AE & GV'))) %>% 
-  tidytable::summarise(value = mean(value), .by = c(year, species_code, name, grwth, err_src, iss_type)) %>% 
+  tidytable::filter(comp_type == 'Total') %>% 
+  # tidytable::summarise(value = mean(value), .by = c(year, species_code, name, grwth, err_src, iss_type)) %>% 
   tidytable::left_join(spec) %>% 
   tidytable::filter(species_type != 'other') %>% 
   tidytable::mutate(species_type = case_when(species_type == 'flatfish' ~ 'Flatfish',
@@ -363,29 +364,40 @@ dev.off()
 # plot caal results (figure 6) ----
 
 png(filename = here::here("figs", "caal_iss.png"), 
-    width = 6.5, height = 5.0,
+    width = 6.5, height = 8.0,
     units = "in", res = 200)
 
 vroom::vroom(here::here('output', 'goa_caal_iss_ag.csv')) %>% 
-  tidytable::summarise(ae = mean(ae, na.rm = TRUE),
-                       al = mean(al, na.rm = TRUE),
-                       ae_al = mean(ae_al, na.rm = TRUE),
-                       base = mean(base, na.rm = TRUE), .by = c(year, species_code, comp_type)) %>% 
-  tidytable::mutate(ae_rel = ae / base,
-                    ae_al_rel = ae_al / base,
-                    al_rel = al / base,
-                    base_rel = 1,
+  tidytable::summarise(ae_caal = mean(ae, na.rm = TRUE),
+                       al_caal = mean(al, na.rm = TRUE),
+                       ae_al_caal = mean(ae_al, na.rm = TRUE),
+                       base_caal = mean(base, na.rm = TRUE), .by = c(year, species_code, comp_type)) %>% 
+  tidytable::mutate(ae_rel_caal = ae_caal / base_caal,
+                    ae_al_rel_caal = ae_al_caal / base_caal,
+                    al_rel_caal = al_caal / base_caal,
+                    base_rel_caal = 1,
                     comp_type = case_when(comp_type == 'female' ~ 'Female',
                                           comp_type == 'male' ~ 'Male',
                                           comp_type == 'total' ~ 'Total')) %>% 
+  tidytable::full_join(plot_dat %>% 
+                         tidytable::filter(species_code %in% c(10110, 21720, 30060) & bin == '1cm' & grwth == 'Annual' & region == 'goa') %>% 
+                         tidytable::select(year, species_code, comp_type, ae, ae_al, al, base) %>%
+                         tidytable::mutate(ae_rel = ae / base,
+                                           ae_al_rel = ae_al / base,
+                                           al_rel = al / base,
+                                           base_rel = 1)) %>% 
   tidytable::pivot_longer(cols = c(ae, ae_al, al, base,
-                                   ae_rel, ae_al_rel, al_rel, base_rel)) %>% 
-  tidytable::mutate(err_src = case_when(name %in% c('ae', 'ae_rel') ~ 'AE',
-                                        name %in% c('al', 'al_rel') ~ 'GV',
-                                        name %in% c('ae_al', 'ae_al_rel') ~ 'AE & GV',
-                                        name %in% c('base', 'base_rel') ~ 'Base'),
-                    iss_type = case_when(name %in% c('ae', 'ae_al', 'al', 'base') ~ 'Conditional age-at-length ISS',
-                                         name %in% c('ae_rel', 'ae_al_rel', 'al_rel', 'base_rel') ~ 'Relative conditional age-at-length ISS'),
+                                   ae_rel, ae_al_rel, al_rel, base_rel,
+                                   ae_caal, ae_al_caal, al_caal, base_caal,
+                                   ae_rel_caal, ae_al_rel_caal, al_rel_caal, base_rel_caal)) %>% 
+  tidytable::mutate(err_src = case_when(name %in% c('ae', 'ae_rel', 'ae_caal', 'ae_rel_caal') ~ 'AE',
+                                        name %in% c('al', 'al_rel', 'al_caal', 'al_rel_caal') ~ 'GV',
+                                        name %in% c('ae_al', 'ae_al_rel', 'ae_al_caal', 'ae_al_rel_caal') ~ 'AE & GV',
+                                        name %in% c('base', 'base_rel', 'base_caal', 'base_rel_caal') ~ 'Base'),
+                    iss_type = case_when(name %in% c('ae', 'ae_al', 'al', 'base') ~ 'Age composition ISS',
+                                         name %in% c('ae_rel', 'ae_al_rel', 'al_rel', 'base_rel') ~ 'Relative age composition ISS',
+                                         name %in% c('ae_caal', 'ae_al_caal', 'al_caal', 'base_caal') ~ 'Conditional age-at-length ISS',
+                                         name %in% c('ae_rel_caal', 'ae_al_rel_caal', 'al_rel_caal', 'base_rel_caal') ~ 'Relative conditional age-at-length ISS'),
                     err_src = factor(err_src, level = c('Base', 'AE', 'GV', 'AE & GV'))) %>% 
   tidytable::left_join(spec) %>% 
   tidytable::mutate(species_type = case_when(species_type == 'flatfish' ~ 'Flatfish',
@@ -610,7 +622,7 @@ plot_dat %>%
 
 
 plot_dat %>% 
-  tidytable::filter(bin == '1cm' & grwth == 'Annual') %>%
+  tidytable::filter(bin == '1cm' & grwth == 'Annual' & species_code != 30420) %>%
   tidytable::left_join(spec) %>%
   tidytable::mutate(prop_ae = ae / base,
                     prop_al = al / base,
