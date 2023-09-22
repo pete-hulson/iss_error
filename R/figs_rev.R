@@ -134,7 +134,8 @@ if(!file.exists(here::here('output', 'afsc_iss_err_full.csv'))){
                        here::here('output', 'afsc_iss_err_full.csv'),
                        delim = ',') -> plot_dat
 } else{
-  plot_dat <- vroom::vroom(here::here('output', 'afsc_iss_err_full.csv'))
+  spec <- vroom::vroom(here::here('data', 'species_code_name.csv')) # species_code and common names
+    plot_dat <- vroom::vroom(here::here('output', 'afsc_iss_err_full.csv'))
 }
 
 surv_labs <- c("Aleutian Isalnds", "Eastern Bering Sea Shelf", "Gulf of Alaska")
@@ -427,6 +428,7 @@ dev.off()
 # plot iss and nss with added error (figure 7) ----
 
 plot_dat %>% 
+  tidytable::filter(bin == '1cm' & grwth == 'Annual') %>% 
   select(year, species_code, comp_type, ae, ae_al, al, base, nhls, nss, region) %>% 
   tidytable::left_join(spec) %>% 
   tidytable::mutate(species_type = case_when(species_type == 'flatfish' ~ 'Flatfish',
@@ -467,6 +469,7 @@ plot_dat %>%
                         parse = TRUE) -> p1
 
 plot_dat %>% 
+  tidytable::filter(bin == '1cm' & grwth == 'Annual') %>% 
   select(year, species_code, comp_type, ae, ae_al, al, base, nhls, nss, region) %>% 
   tidytable::left_join(spec) %>% 
   tidytable::mutate(ae_ss = ae / nss,
@@ -514,6 +517,7 @@ dev.off()
 # plot iss and hauls with added error (figure 8) ----
 
 plot_dat %>%
+  tidytable::filter(bin == '1cm' & grwth == 'Annual') %>% 
   select(year, species_code, comp_type, ae, ae_al, al, base, nhls, nss, region) %>%
   tidytable::left_join(spec) %>%
   tidytable::mutate(ae_hl = ae / nhls,
@@ -555,11 +559,8 @@ hls_dat %>%
                         parse = TRUE) -> p1
 
 hls_dat %>%
+  tidytable::filter(bin == '1cm' & grwth == 'Annual') %>% 
   tidytable::drop_na() %>%
-  tidytable::summarise(mn_hls = median(value),
-                       cv = sd(value) / mean(value), .by = c(species_type, err_src))
-  
-  
   ggplot(aes(err_src, value, fill = err_src)) +
   geom_boxplot2(width.errorbar = 0, alpha= 0.5) +
   facet_grid( ~ species_type) +
@@ -716,6 +717,7 @@ plot_dat %>%
   select(year, species_code, comp_type, ae, ae_al, al, base, region, bin, grwth) %>% 
   tidytable::filter(bin == '1cm' & grwth == 'Pooled') %>% 
   tidytable::left_join(spec) %>%
+  tidytable::filter(species_type != 'other') %>% 
   tidytable::pivot_longer(cols = c(ae, ae_al, al, base)) %>% 
   tidytable::mutate(err_src = case_when(name == 'ae' ~ 'AE',
                                         name == 'al' ~ 'GV',
