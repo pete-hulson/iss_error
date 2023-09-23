@@ -365,7 +365,7 @@ dev.off()
 # plot caal results (figure 6) ----
 
 png(filename = here::here("figs", "caal_iss.png"), 
-    width = 6.5, height = 8.0,
+    width = 6.5, height = 7.0,
     units = "in", res = 200)
 
 vroom::vroom(here::here('output', 'goa_caal_iss_ag.csv')) %>% 
