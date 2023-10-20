@@ -409,7 +409,7 @@ vroom::vroom(here::here('output', 'goa_caal_iss_ag.csv')) %>%
   geom_boxplot2(width.errorbar = 0, alpha= 0.5) +
   facet_grid(iss_type ~ stock, 
              scales = "free_y",
-             labeller = label_wrap_gen(20),
+             labeller = label_wrap_gen(17),
              switch = "y") +
   theme(legend.position = "bottom",
         strip.text.y.right = element_text(angle = 270),
@@ -731,7 +731,7 @@ plot_dat %>%
   ggplot(aes(comp_type, value, fill = err_src)) +
   geom_boxplot2(width.errorbar = 0, alpha= 0.5) +
   facet_grid(species_name ~ surv_labs, 
-             scales = "free_y",
+             scales = "fixed",
              labeller = label_wrap_gen(10)) +
   theme(legend.position = "bottom",
         strip.text.y.right = element_text(angle = 0)) +
@@ -768,7 +768,7 @@ plot_dat %>%
   ggplot(aes(comp_type, value, fill = err_src)) +
   geom_boxplot2(width.errorbar = 0, alpha= 0.5) +
   facet_grid(species_name ~ surv_labs, 
-             scales = "free_y",
+             scales = "fixed",
              labeller = label_wrap_gen(10)) +
   theme(legend.position = "bottom",
         strip.text.y.right = element_text(angle = 0)) +
@@ -806,7 +806,7 @@ plot_dat %>%
   ggplot(aes(comp_type, value, fill = err_src)) +
   geom_boxplot2(width.errorbar = 0, alpha= 0.5) +
   facet_grid(species_name ~ surv_labs, 
-             scales = "free_y",
+             scales = "fixed",
              labeller = label_wrap_gen(10)) +
   theme(legend.position = "bottom",
         strip.text.y.right = element_text(angle = 0)) +
@@ -844,7 +844,7 @@ plot_dat %>%
   ggplot(aes(comp_type, value, fill = err_src)) +
   geom_boxplot2(width.errorbar = 0, alpha= 0.5) +
   facet_grid(species_name ~ surv_labs, 
-             scales = "free_y",
+             scales = "fixed",
              labeller = label_wrap_gen(10)) +
   theme(legend.position = "bottom",
         strip.text.y.right = element_text(angle = 0)) +
